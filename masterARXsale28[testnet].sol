@@ -1,4 +1,5 @@
 pragma solidity ^0.4.11;
+// -------------------------------------------------
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
 // [v2.8 final released 10/07/2017 final masterARXsale28.sol]
 // [Adapted from Ethereum standard crowdsale contract]
@@ -21,39 +22,9 @@ pragma solidity ^0.4.11;
 // 4.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, failed crowdsale w/refunds (ARV)]
 // -------------------------------------------------
 // Functional reviews completed 10/07/2017
-// [X][X][X][X]	(Crowdsale) test	 1:	Verify only owner can initiate crowdsale or setup parameters.
-// [X][X][X][X]	(Crowdsale) test	 2:	Crowdsale is properly initialized with given parameters.
-// [X][X][X][X]	(Crowdsale) test	 3:	Verify prevention of post-init modification crowdsale parameters.
-// [X][X][X][X]	(Crowdsale) test	 4:	User cannot participate to the crowdsale too early via BuyTokens.
-// [X][X][X][X]	(Crowdsale) test	 5:	User cannot participate to the crowdsale too early via sending eth.
-// [X][X][X][X]	(Crowdsale) test	 6:	Check the checkGoalReached function interacts with isCrowdsaleCompleted variable as desired.
-// [X][X][X][X]	(Crowdsale) test	 7:	Users sending eth to crowdsale address successfully buy token at the correct price (input in Eth).
-// [X][X][X][X]	(Crowdsale) test	 8:	Users can buy tokens via BuyTokens function at the correct price (input in Eth).
-// [X][X][X][X]	(Crowdsale) test	 9:	Users cannot purchase tokens via BuyTokens when crowdsale is halted.
-// [X][X][X][X]	(Crowdsale) test	 10:	Users cannot purchase tokens via sending eth when crowdsale is halted.
-// [X][X][X][X]	(Crowdsale) test	 11:	Watch token and Watch contract(crowdsale) via address and JSON functions as intended.
-// [X][X][X][X]	(Crowdsale) test	 12:	Users can purchase tokens via both methods (sending Eth, or executing BuyTokens) when crowdsale is resumed.
-// [X][X][X][X]	(Crowdsale) test	 13:	Users cannot exceed the maxFundingCap under any combination of conditions.
-// [X][X][X][X]	(Crowdsale) test	 14:	Crowdsale flags as completed when checkGoalReached is executed under correct conditions.
-// [X][X][X][X]	(Crowdsale) test	 15:	User cannot purchase tokens when crowdsale is completed via either method.
-// [X][X][X][X]	(Crowdsale) test	 16:	+10% of total generated tokens are sent to foundation post-sale when founder runs AllocateFounderTokens.
-// [X][X][X][X]	(Crowdsale) test	 17:	Founder can execute BeneficiaryWithdraw post-sale if min-funded or higher to transfer raised Eth to multi-sig wallet.
-// [X][X][X][X]	(Crowdsale) test	 18:	User purchased, and foundation allocated tokens are generated, sent, and their purchase recorded correctly.
-// [X][X][X][X]	(Crowdsale) test	 19:	Integer Overflow protection working.
-// [X][X][X][X]	(Crowdsale) test	 20:	Verify refunds work, based on soft cap not reached & crowdsale deadline expired. User executes refund() &gets Eth.
-// [X][X][X][X]	(Crowdsale) test	 21:	Test checkGoalReached successfully updates status if deadline has expired.
-// [X][X][X][X]	(Crowdsale) test	 22:	Verify security and run conditions on checkGoalReached and refund functions.
-// [X][X][X][X]	(Crowdsale) test	 23:	Only original owner can execute ownership protected functions (halt, unhalt).
-// [X][X][X][X]	(Crowdsale) test	 24:	Verify founderTokensAvailable starts false & becomes true only when max funded or expired & above min funding cap.
-// [X][X][X][X]	(Crowdsale) test	 25:	Verify BuyToken only sends to msg.sender even if overriden (required for refunds).
-// [X][X][X][X]	(ERC-20) test		   26:	ERC-20 compatible transfer() is available and functional.
-// [X][X][X][X]	(ERC-20) test		   27:	ERC-20 transfer fails if user exceeds his/her balance.
-// [X][X][X][X]	(ERC-20) test		   28:	ERC-20 compatible transferFrom() is available and functional.
-// [X][X][X][X]	(ERC-20) test		   29:	User can set allowance approval list for transfers.
-// [X][X][X][X]	(ERC-20) test		   30:	Tokens can be transferred with ECR-20 allowance approval.
-// [X][X][X][X]	(ERC-20) test		   31:	transferFrom fails if user exceeds his/her allowance or from balance.
-// [X][X][X][X]	(ERC-20) test		   32:	User cannot transfer more than approved allowance.
-// [X][X][X][X]                         [verified]
+// full list of functional tests and results here (we encourage you to review):
+// https://github.com/assistivereality/ico/blob/master/2.6-crowdsaletests%5Btestnet%5D(masterARXsale2.8final).txt
+// -------------------------------------------------
 
 contract owned {
     address public owner;
