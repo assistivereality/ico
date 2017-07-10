@@ -115,11 +115,11 @@ contract ERC20Interface is owned, SafeMath {
 
 contract ARXCrowdsale is ERC20Interface {
     // deployment variables for dynamic supply token
-    string public constant standard   =           "ARX";
-    string public constant name       =           "ARX";
-    string public constant symbol     =           "ARX";
-    uint8  public constant decimals   =           18;
-    uint256 _totalSupply              =           0;
+    string public constant standard   =             "ARX";
+    string public constant name       =             "ARX";
+    string public constant symbol     =             "ARX";
+    uint8  public constant decimals   =             18;
+    uint256 _totalSupply              =             0;
 
     address public admin = owner;                   // admin address
     uint256 public fundingStartBlock;               // crowdsale start block#
@@ -131,9 +131,9 @@ contract ARXCrowdsale is ERC20Interface {
     uint256 public fundingMinInWei;                 // funding min in Wei e.g. 11 000 000 000 000 000 000 = 11 Eth
     uint256 public fundingMaxInEth;                 // funding max in Eth (approx) e.g. 21 Eth
     uint256 public fundingMinInEth;                 // funding min in Eth (approx) e.g. 11 Eth
-    uint256 public foundationFundAllocInWei;        // (fundingMaxInWei/10) foundationFundMultisig tokens post-crowdsale that go to Assistive Reality foundation multi-sig for developer distributions
+    uint256 public foundationFundAllocInWei;        // (fundingMaxInWei/10) foundationFundMultisig tokens post-crowdsale that go to Assistive Reality foundation
     address public foundationFundMultisig;          // foundationFundMultisig multi-sig wallet address - Assistive Reality foundation fund
-    uint256 public remainingCapInWei;               // amount of cap remaining to raise in Wei e.g. 1 200 000 000 000 000 000 = 1.2 Eth remaining to raise
+    uint256 public remainingCapInWei;               // amount of cap remaining to raise in Wei e.g. 1 200 000 000 000 000 000 = 1.2 Eth remaining
     uint256 public remainingCapInEth;               // amount of cap remaining to raise in Eth (approx) e.g. 1
     bool    public isCrowdSaleComplete = false;     // boolean for crowdsale completed or not
     bool    public isCrowdSaleSetup = false;        // boolean for crowdsale setup
@@ -295,7 +295,7 @@ contract ARXCrowdsale is ERC20Interface {
         founderTokensAvailable = true;
       }
 
-      // 3. interaction (throw if fail to generate for any reason)
+      // 3. interaction
       balances[recipient] = safeAdd(balances[recipient], rewardTransferAmount);
       _totalSupply = safeAdd(_totalSupply, rewardTransferAmount);
       Transfer(this, recipient, rewardTransferAmount);
@@ -322,11 +322,9 @@ contract ARXCrowdsale is ERC20Interface {
       if (isCrowdSaleComplete) {
         // if crowdsale period completed allow multi-sig withdraw
         beneficiaryMultiSig.transfer(_amount);
-        //Transfer(msg.sender, beneficiaryMultiSig, _amount);
       } else if ((halted) && (amountRaisedInWei >= fundingMinInWei)) {
         // if crowdsale emergency halted and minimum funding met
         beneficiaryMultiSig.transfer(_amount);
-        //Transfer(msg.sender, beneficiaryMultiSig, _amount);
       }
       //do nothing if no conditions match
     }
@@ -355,7 +353,7 @@ contract ARXCrowdsale is ERC20Interface {
         uint256 ARXbalance = balances[msg.sender];
         if (ARXbalance == 0) throw;
         balances[msg.sender] = 0;
-        _totalSupply = safeSub(_totalSupply, ARXbalance);        
+        _totalSupply = safeSub(_totalSupply, ARXbalance);
         uint256 ethValue = safeDiv(ARXbalance, tokensPerEthPrice);
         amountRaisedInWei = safeSub(amountRaisedInWei, ethValue);
         msg.sender.transfer(ethValue);
