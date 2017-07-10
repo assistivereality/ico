@@ -121,24 +121,24 @@ contract ARXCrowdsale is ERC20Interface {
     uint8  public constant decimals   =           18;
     uint256 _totalSupply              =           0;
 
-    address public admin = owner;                 // admin address
-    uint256 public fundingStartBlock;             // crowdsale start block#
-    uint256 public fundingEndBlock;               // crowdsale end block#
-    address public beneficiaryMultiSig;           // beneficiaryMultiSig (founder group) multi-sig wallet account
-    uint256 public tokensPerEthPrice;             // priceVar e.g. 20,000,000 tokens per Eth
-    uint256 public amountRaisedInWei;             // total amount raised in Wei e.g. 21 000 000 000 000 000 000 = 21Eth
-    uint256 public fundingMaxInWei;               // Eth funding max in Wei e.g. 21 000 000 000 000 000 000 = 21Eth
-    uint256 public fundingMinInWei;               // Eth funding min in Wei e.g. 11 000 000 000 000 000 000 = 11Eth
-    uint256 public fundingMaxInEth;               // Eth funding max in Wei e.g. 21Eth
-    uint256 public fundingMinInEth;               // Eth funding min in Wei e.g. 11Eth
-    uint256 public foundationFundAllocInWei;      // (fundingMaxInWei/10) foundationFundMultisig tokens post-crowdsale that go to Assistive Reality foundation multi-sig for developer distributions
-    address public foundationFundMultisig;        // foundationFundMultisig multi-sig wallet address - Assistive Reality foundation fund
-    uint256 public remainingCapInWei;             // amount of cap remaining to raise in Wei e.g. 1 000 000 000 000 000 000 = 1Eth remaining to raise
-    uint256 public remainingCapInEth;             // amount of cap remaining to raise in Eth e.g. 1
-    bool    public isCrowdSaleComplete = false;   // boolean for crowdsale completed or not
-    bool    public isCrowdSaleSetup = false;      // boolean for crowdsale setup
-    bool    public halted = false;                // boolean for halted or not
-    bool    public founderTokensAvailable = false;// variable to set false after generating founderTokens
+    address public admin = owner;                   // admin address
+    uint256 public fundingStartBlock;               // crowdsale start block#
+    uint256 public fundingEndBlock;                 // crowdsale end block#
+    address public beneficiaryMultiSig;             // beneficiaryMultiSig (founder group) multi-sig wallet account
+    uint256 public tokensPerEthPrice;               // priceVar e.g. 20,000,000 tokens per Eth
+    uint256 public amountRaisedInWei;               // total amount raised in Wei e.g. 21 000 000 000 000 000 000 = 21 Eth
+    uint256 public fundingMaxInWei;                 // funding max in Wei e.g. 21 000 000 000 000 000 000 = 21 Eth
+    uint256 public fundingMinInWei;                 // funding min in Wei e.g. 11 000 000 000 000 000 000 = 11 Eth
+    uint256 public fundingMaxInEth;                 // funding max in Eth (approx) e.g. 21 Eth
+    uint256 public fundingMinInEth;                 // funding min in Eth (approx) e.g. 11 Eth
+    uint256 public foundationFundAllocInWei;        // (fundingMaxInWei/10) foundationFundMultisig tokens post-crowdsale that go to Assistive Reality foundation multi-sig for developer distributions
+    address public foundationFundMultisig;          // foundationFundMultisig multi-sig wallet address - Assistive Reality foundation fund
+    uint256 public remainingCapInWei;               // amount of cap remaining to raise in Wei e.g. 1 200 000 000 000 000 000 = 1.2 Eth remaining to raise
+    uint256 public remainingCapInEth;               // amount of cap remaining to raise in Eth (approx) e.g. 1
+    bool    public isCrowdSaleComplete = false;     // boolean for crowdsale completed or not
+    bool    public isCrowdSaleSetup = false;        // boolean for crowdsale setup
+    bool    public halted = false;                  // boolean for halted or not
+    bool    public founderTokensAvailable = false;  // variable to set false after generating founderTokens
 
     // balances and transfer allowance arrays
     mapping(address => uint256) balances;
