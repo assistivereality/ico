@@ -355,11 +355,11 @@ contract ARXCrowdsale is ERC20Interface {
         uint256 ARXbalance = balances[msg.sender];
         if (ARXbalance == 0) throw;
         balances[msg.sender] = 0;
-        _totalSupply = safeSub(_totalSupply, ARXbalance);
-        Burn(msg.sender, ARXbalance);
+        _totalSupply = safeSub(_totalSupply, ARXbalance);        
         uint256 ethValue = safeDiv(ARXbalance, tokensPerEthPrice);
-        msg.sender.transfer(ethValue);
         amountRaisedInWei = safeSub(amountRaisedInWei, ethValue);
+        msg.sender.transfer(ethValue);
+        Burn(msg.sender, ARXbalance);
         Refund(msg.sender, ethValue);
       }
     }
