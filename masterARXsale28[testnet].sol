@@ -3,7 +3,7 @@ pragma solidity ^0.4.11;
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
 // [v2.8 final released 10/07/2017 final masterARXsale28.sol]
 // [Adapted from Ethereum standard crowdsale contract]
-// [Contact assistivereality@gmail.com for any queries]
+// [Contact staff@aronline.io for any queries]
 // [Math operations migrated to SafeMath equivalent]
 // -------------------------------------------------
 // ERC Token Standard #20 Interface
