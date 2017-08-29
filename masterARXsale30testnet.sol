@@ -59,7 +59,7 @@ contract SafeMath {
 }
 
 contract ERC20Interface is owned, SafeMath {
-    function totalSupply() constant returns (uint256 totalSupplyVar);
+    function totalSupply() constant returns (uint256 ARXtotalSupply);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
@@ -113,8 +113,8 @@ contract ARXCrowdsale is ERC20Interface {
     }
 
     // total supply value for the token
-    function totalSupply() constant returns (uint256 totalSupplyVar) {
-        totalSupplyVar = _totalSupply;
+    function totalSupply() constant returns (uint256 ARXtotalSupply) {
+        ARXtotalSupply = _totalSupply;
     }
 
     // get the account balance
@@ -123,23 +123,23 @@ contract ARXCrowdsale is ERC20Interface {
     }
 
     // returns approximate crowdsale max funding in Eth
-    function fundingMaxInEth() constant returns (uint256 fundingMaxInEthVar) {
-      fundingMaxInEthVar = safeDiv(fundingMaxInWei,1 ether);
+    function fundingMaxInEth() constant returns (uint256 fundingMaximumInEth) {
+      fundingMaximumInEth = safeDiv(fundingMaxInWei,1 ether);
     }
 
     // returns approximate crowdsale min funding in Eth
-    function fundingMinInEth() constant returns (uint256 fundingMinInEthVar) {
-      fundingMinInEthVar = safeDiv(fundingMinInWei,1 ether);
+    function fundingMinInEth() constant returns (uint256 fundingMinimumInEth) {
+      fundingMinimumInEth = safeDiv(fundingMinInWei,1 ether);
     }
 
     // returns approximate crowdsale progress (funds raised) in Eth
-    function amountRaisedInEth() constant returns (uint256 amountRaisedInEthVar) {
-      amountRaisedInEthVar = safeDiv(amountRaisedInWei,1 ether);
+    function amountRaisedInEth() constant returns (uint256 amountRaisedSoFarInEth) {
+      amountRaisedSoFarInEth = safeDiv(amountRaisedInWei,1 ether);
     }
 
     // returns approximate crowdsale remaining cap (hardcap) in Eth
-    function remainingCapInEth() constant returns (uint256 remainingCapInEthVar) {
-      remainingCapInEthVar = safeDiv(remainingCapInWei,1 ether);
+    function remainingCapInEth() constant returns (uint256 remainingHardCapInEth) {
+      remainingHardCapInEth = safeDiv(remainingCapInWei,1 ether);
     }
 
     // send tokens
