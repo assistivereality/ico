@@ -3,6 +3,12 @@ Assistive Reality
 Crowdsale smart contract testing
 https://aronline.io/icoinfo
 --------------------------------------------------------
+recent updates:
+// [Math operations migrated to SafeMath equivalent]
+// [Throw converted to revert() for all functions]
+// [Inbuilt symbol re-declaration modifications made]
+// [Variables changed from matching function names]
+--------------------------------------------------------
 1.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, fully funded crowdsale        (ARX)]
 2.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, min funded crowdsale          (ARX)]
 3.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, failed crowdsale w/refunds    (ARV)]

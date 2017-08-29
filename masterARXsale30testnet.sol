@@ -4,30 +4,14 @@ pragma solidity ^0.4.11;
 // [v3.0 final released 30/08/2017 final masterARXsale30.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
-// [Math operations migrated to SafeMath equivalent]
-// [Throw converted to revert() for all functions]
 // -------------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 10/07/2017
-// - [X] integer math/overflow protection via SafeMath
-// - [X] recursion / reentry safeguards
-// - [X] ownership and inheritance of this modifier throughout
-// - [X] sensitive function protection
-// - [X] ERC20-compliant balance checking, integer math
-// -------------------------------------------------
-// 1.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, fully funded crowdsale     (ARX)]
-// 2.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, min funded crowdsale       (ARV)]
-// 3.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, failed crowdsale w/refunds (ARV)]
-// 4.release tested: [v2.9 released 29/08/2017 final masterARsale29.sol, fully funded crowdsale         (ARX)]
-// 5.release tested: [v3.0 released 30/08/2017 final masterARsale30.sol, min funded crowdsale           (ARX)]
-// 6.release tested: [v3.0 released 30/08/2017 final masterARsale30.sol, failed crowdsale w/refunds     (ARX)]
-// 7.release tested: [v3.0 released 30/08/2017 final masterARsale30.sol, fully funded crowdsale         (ARX)]
-// -------------------------------------------------
+// Security reviews completed 30/08/2017
 // Functional reviews completed 30/08/2017
-// full list of functional tests and results here (we encourage you to review):
-// https://github.com/assistivereality/ico/blob/master/3.0-crowdsaletests%5Btestnet%5D(masterARXsale3.0final).txt
+// Test results here (we encourage you to review):
+// https://github.com/assistivereality/ico/blob/master/3.0crowdsaletestsARXtestnet.txt
 // -------------------------------------------------
 
 contract owned {
@@ -44,39 +28,38 @@ contract owned {
     }
 }
 
-
 contract SafeMath {
   function safeMul(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a * b;
-    assert(a == 0 || c / a == b);
+    safeAssert(a == 0 || c / a == b);
     return c;
   }
 
   function safeDiv(uint256 a, uint256 b) internal returns (uint256) {
-    assert(b > 0);
+    safeAssert(b > 0);
     uint256 c = a / b;
-    assert(a == b * c + a % b);
+    safeAssert(a == b * c + a % b);
     return c;
   }
 
   function safeSub(uint256 a, uint256 b) internal returns (uint256) {
-    assert(b <= a);
+    safeAssert(b <= a);
     return a - b;
   }
 
   function safeAdd(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a + b;
-    assert(c>=a && c>=b);
+    safeAssert(c>=a && c>=b);
     return c;
   }
 
-  function assert(bool assertion) internal {
+  function safeAssert(bool assertion) internal {
     if (!assertion) revert();
   }
 }
 
 contract ERC20Interface is owned, SafeMath {
-    function totalSupply() constant returns (uint256 totalSupply);
+    function totalSupply() constant returns (uint256 totalSupplyVar);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
@@ -130,33 +113,33 @@ contract ARXCrowdsale is ERC20Interface {
     }
 
     // total supply value for the token
-    function totalSupply() constant returns (uint256 totalSupply) {
-        totalSupply = _totalSupply;
+    function totalSupply() constant returns (uint256 totalSupplyVar) {
+        totalSupplyVar = _totalSupply;
     }
 
     // get the account balance
     function balanceOf(address _owner) constant returns (uint256 balance) {
-        return balances[_owner];;;
+        return balances[_owner];
     }
 
     // returns approximate crowdsale max funding in Eth
-    function fundingMaxInEth() constant returns (uint256 fundingMaxInEth) {
-      fundingMaxInEth = safeDiv(fundingMaxInWei,1 ether);
+    function fundingMaxInEth() constant returns (uint256 fundingMaxInEthVar) {
+      fundingMaxInEthVar = safeDiv(fundingMaxInWei,1 ether);
     }
 
     // returns approximate crowdsale min funding in Eth
-    function fundingMinInEth() constant returns (uint256 fundingMinInEth) {
-      fundingMinInEth = safeDiv(fundingMinInWei,1 ether);
+    function fundingMinInEth() constant returns (uint256 fundingMinInEthVar) {
+      fundingMinInEthVar = safeDiv(fundingMinInWei,1 ether);
     }
 
     // returns approximate crowdsale progress (funds raised) in Eth
-    function amountRaisedInEth() constant returns (uint256 amountRaisedInEth) {
-      amountRaisedInEth = safeDiv(amountRaisedInWei,1 ether);
+    function amountRaisedInEth() constant returns (uint256 amountRaisedInEthVar) {
+      amountRaisedInEthVar = safeDiv(amountRaisedInWei,1 ether);
     }
 
     // returns approximate crowdsale remaining cap (hardcap) in Eth
-    function remainingCapInEth() constant returns (uint256 remainingCapInEth) {
-      remainingCapInEth = safeDiv(remainingCapInWei,1 ether);
+    function remainingCapInEth() constant returns (uint256 remainingCapInEthVar) {
+      remainingCapInEthVar = safeDiv(remainingCapInWei,1 ether);
     }
 
     // send tokens
@@ -252,10 +235,46 @@ contract ARXCrowdsale is ERC20Interface {
     function () payable {
       if (msg.data.length != 0) return;
       if (!isCrowdSaleSetup) revert();
-      BuyTokens(msg.sender);
+      BuyTokens(); // removed parameter to simplify
     }
 
-    function BuyTokens(address recipient) payable {
+    function BuyTokens() payable {
+      // for a number of reasons (gas issue, load reduction, best practices) we are using beneficiaryMultiSigWithdraw instead of: (if (!beneficiaryMultiSig.send(msg.value)) revert()) at end of block #1 below;
+      // 0. vars
+      address recipient = msg.sender; // to simplify refunding, to prevent people buying on other's behalf, or even providing wrong address to receive - this overrides any manually entered recipient address to send tokens to msg.sender (ether sender)
+      uint256 amount = msg.value;
+      uint256 TotalAfterContribution = safeAdd(amountRaisedInWei,amount);
+      uint256 rewardTransferAmount = 0;
+
+      // 1. conditions (length, crowdsale setup, zero check, exceed funding contrib check, contract valid check, within funding block range check, balance overflow check etc)
+      if (halted) revert();
+      if (!isCrowdSaleSetup) revert();
+      if (amount == 0) revert();
+      if (TotalAfterContribution > fundingMaxInWei) revert();
+      if (!(block.number >= fundingStartBlock && block.number <= fundingEndBlock)) revert();
+      if (isCrowdSaleComplete) revert();
+
+      // 2. effects
+      amountRaisedInWei = safeAdd(amountRaisedInWei,amount);
+      remainingCapInWei = safeSub(fundingMaxInWei,amountRaisedInWei);
+      rewardTransferAmount = safeMul(amount,tokensPerEthPrice);
+
+      if (amountRaisedInWei >= fundingMaxInWei) {
+        isCrowdSaleComplete = true;
+      }
+
+      if (amountRaisedInWei >= fundingMinInWei) {
+        founderTokensAvailable = true;
+      }
+
+      // 3. interaction
+      balances[recipient] = safeAdd(balances[recipient], rewardTransferAmount);
+      _totalSupply = safeAdd(_totalSupply, rewardTransferAmount);
+      Transfer(this, recipient, rewardTransferAmount);
+      Buy(recipient, amount, rewardTransferAmount);
+    }
+
+    function BuyTokensInternal(address recipient) payable {
       // for a number of reasons (gas issue, load reduction, best practices) we are using beneficiaryMultiSigWithdraw instead of: (if (!beneficiaryMultiSig.send(msg.value)) revert()) at end of block #1 below;
       // 0. vars
       uint256 amount = msg.value;
