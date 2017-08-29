@@ -44,6 +44,7 @@ contract owned {
     }
 }
 
+
 contract SafeMath {
   function safeMul(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a * b;
@@ -135,7 +136,7 @@ contract ARXCrowdsale is ERC20Interface {
 
     // get the account balance
     function balanceOf(address _owner) constant returns (uint256 balance) {
-        return balances[_owner];
+        return balances[_owner];;;
     }
 
     // returns approximate crowdsale max funding in Eth
