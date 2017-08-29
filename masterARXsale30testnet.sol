@@ -274,42 +274,6 @@ contract ARXCrowdsale is ERC20Interface {
       Buy(recipient, amount, rewardTransferAmount);
     }
 
-    function BuyTokensInternal(address recipient) payable {
-      // for a number of reasons (gas issue, load reduction, best practices) we are using beneficiaryMultiSigWithdraw instead of: (if (!beneficiaryMultiSig.send(msg.value)) revert()) at end of block #1 below;
-      // 0. vars
-      uint256 amount = msg.value;
-      uint256 TotalAfterContribution = safeAdd(amountRaisedInWei,amount);
-      uint256 rewardTransferAmount = 0;
-      recipient = msg.sender; // added to simplify refunding, to prevent people buying on other's behalf, or even providing wrong address to receive - this overrides any manually entered recipient address to send tokens to msg.sender (ether sender)
-
-      // 1. conditions (length, crowdsale setup, zero check, exceed funding contrib check, contract valid check, within funding block range check, balance overflow check etc)
-      if (halted) revert();
-      if (!isCrowdSaleSetup) revert();
-      if (amount == 0) revert();
-      if (TotalAfterContribution > fundingMaxInWei) revert();
-      if (!(block.number >= fundingStartBlock && block.number <= fundingEndBlock)) revert();
-      if (isCrowdSaleComplete) revert();
-
-      // 2. effects
-      amountRaisedInWei = safeAdd(amountRaisedInWei,amount);
-      remainingCapInWei = safeSub(fundingMaxInWei,amountRaisedInWei);
-      rewardTransferAmount = safeMul(amount,tokensPerEthPrice);
-
-      if (amountRaisedInWei >= fundingMaxInWei) {
-        isCrowdSaleComplete = true;
-      }
-
-      if (amountRaisedInWei >= fundingMinInWei) {
-        founderTokensAvailable = true;
-      }
-
-      // 3. interaction
-      balances[recipient] = safeAdd(balances[recipient], rewardTransferAmount);
-      _totalSupply = safeAdd(_totalSupply, rewardTransferAmount);
-      Transfer(this, recipient, rewardTransferAmount);
-      Buy(recipient, amount, rewardTransferAmount);
-    }
-
     function AllocateFounderTokens() onlyOwner {
       if ((isCrowdSaleComplete) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
         // calculate additional 10% tokens to allocate for foundation developer distributions
