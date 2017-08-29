@@ -320,7 +320,7 @@ contract ARXCrowdsale is ERC20Interface {
     function refund() {
       // halt protection
       if (halted) revert();
-      // refunds available if soft cap not reached and deadline expires
+      // refunds available if soft cap not reached and deadline expires, each contributor can call refund() to get their funds back
       if ((amountRaisedInWei < fundingMinInWei) && (block.number >= fundingEndBlock)) {
         uint256 ARXbalance = balances[msg.sender];
         if (ARXbalance == 0) revert();
