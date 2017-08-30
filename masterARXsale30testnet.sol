@@ -1,15 +1,15 @@
 pragma solidity ^0.4.11;
 // -------------------------------------------------
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
-// [v3.0 final released 30/08/2017 final masterARXsale30.sol]
+// [v3.0 final released 31/08/2017 final masterARXsale30.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
 // -------------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 30/08/2017
-// Functional reviews completed 30/08/2017
+// Security reviews completed 31/08/2017
+// Functional reviews completed 31/08/2017
 // Test results here (we encourage you to review):
 // https://github.com/assistivereality/ico/blob/master/3.0crowdsaletestsARXtestnet.txt
 // -------------------------------------------------
@@ -59,7 +59,7 @@ contract SafeMath {
 }
 
 contract ERC20Interface is owned, SafeMath {
-    function totalSupply() constant returns (uint256 ARXtotalSupply);
+    function totalSupply() constant returns (uint256 ARXtotalSupplyLong);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
@@ -90,7 +90,7 @@ contract ARXCrowdsale is ERC20Interface {
     uint256 public fundingMinInWei;                 // funding min in Wei e.g. 11 000 000 000 000 000 000 = 11 Eth
     uint256 public fundingMaxInEth;                 // funding max in Eth (approx) e.g. 21 Eth
     uint256 public fundingMinInEth;                 // funding min in Eth (approx) e.g. 11 Eth
-    uint256 public foundationFundAllocInWei;        // (fundingMaxInWei/10) foundationFundMultisig tokens post-crowdsale that go to Assistive Reality foundation
+    uint256 public foundationFundTokenCountLong;    // 10% additional tokens generated and sent to foundationFundMultisig/Assistive Reality foundation, 18 decimals
     address public foundationFundMultisig;          // foundationFundMultisig multi-sig wallet address - Assistive Reality foundation fund
     uint256 public remainingCapInWei;               // amount of cap remaining to raise in Wei e.g. 1 200 000 000 000 000 000 = 1.2 Eth remaining
     uint256 public remainingCapInEth;               // amount of cap remaining to raise in Eth (approx) e.g. 1
@@ -113,8 +113,8 @@ contract ARXCrowdsale is ERC20Interface {
     }
 
     // total supply value for the token
-    function totalSupply() constant returns (uint256 ARXtotalSupply) {
-        ARXtotalSupply = _totalSupply;
+    function totalSupply() constant returns (uint256 ARXtotalSupplyLong) {
+        ARXtotalSupplyLong = _totalSupply;
     }
 
     // get the account balance
@@ -277,13 +277,13 @@ contract ARXCrowdsale is ERC20Interface {
     function AllocateFounderTokens() onlyOwner {
       if ((isCrowdSaleComplete) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
         // calculate additional 10% tokens to allocate for foundation developer distributions
-          foundationFundAllocInWei = safeDiv(amountRaisedInWei,10);
-          foundationFundAllocInWei = safeMul(foundationFundAllocInWei,tokensPerEthPrice);
+          foundationFundTokenCountLong = safeDiv(amountRaisedInWei,10);
+          foundationFundTokenCountLong = safeMul(foundationFundTokenCountLong,tokensPerEthPrice);
           // generate and send foundation developer token distributions
-          balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundAllocInWei);
-          _totalSupply = safeAdd(_totalSupply, foundationFundAllocInWei);
-          Transfer(this, foundationFundMultisig, foundationFundAllocInWei);
-          Buy(foundationFundMultisig, 0, foundationFundAllocInWei);
+          balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundTokenCountLong);
+          _totalSupply = safeAdd(_totalSupply, foundationFundTokenCountLong);
+          Transfer(this, foundationFundMultisig, foundationFundTokenCountLong);
+          Buy(foundationFundMultisig, 0, foundationFundTokenCountLong);
           founderTokensAvailable = false;
       }
       //do nothing if all conditions don't match

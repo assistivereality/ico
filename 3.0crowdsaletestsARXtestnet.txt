@@ -15,7 +15,7 @@ recent updates:
 4.release tested: [v2.9 released 21/08/2017 final masterARsale29.sol, fully funded crowdsale            (ARX)]
 5.release tested: [v3.0 released 30/08/2017 final masterARsale30.sol, min funded crowdsale              (ARX)]
 6.release tested: [v3.0 released 30/08/2017 final masterARsale30.sol, failed crowdsale w/refunds        (ARX)]
-7.release tested: [v3.0 released 30/08/2017 final masterARsale30.sol, fully funded crowdsale            (ARX)]
+7.release tested: [v3.0 released 31/08/2017 final masterARsale30.sol, fully funded crowdsale            (ARX)]
 --------------------------------------------------------
 test runs:
 [1][2][3][4]
