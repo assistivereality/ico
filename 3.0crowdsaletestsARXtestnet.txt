@@ -53,6 +53,8 @@ test runs:
 [X][X][X][X]	(ERC-20) test31: TransferFrom fails if user exceeds his/her allowance or from balance.
 [X][X][X][X]	(ERC-20) test32: User cannot transfer more than approved allowance.
 [X][X][X][X]	(ERC-20) test33: Throw functions are successfully migrated to revert() and working as intended.
+[X][X][X][X]	(Crowdsale)  test34: Throw functions within crowdsale migrated to revert() and working as intended.
+[X][X][X][X]	(Crowdsale)  test35: Full regression test of all tests 1-34 for 3.0 revision(s) of contract.
 --------------------------------------------------------
 [X][X][X][X]  [verified]
 --------------------------------------------------------
