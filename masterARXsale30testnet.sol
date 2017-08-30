@@ -209,8 +209,8 @@ contract ARXCrowdsale is ERC20Interface {
             foundationFundMultisig = 0xA0170362e7a68bEAA754E0C35f3af0C6384236bD;
 
             // funding targets with 18 decimals
-            fundingMaxInWei = 160000000000000000000;      //160 000 000 000 000 000 000 = 160 Eth (hard cap) - crowdsale no longer accepts Eth after this value
-            fundingMinInWei = 16000000000000000000;       // 16 000 000 000 000 000 000 =  16 Eth (soft cap) - crowdsale is considered success after this value
+            fundingMaxInWei = 16000000000000000000;      //16 000 000 000 000 000 000 = 16 Eth (hard cap) - crowdsale no longer accepts Eth after this value
+            fundingMinInWei = 6000000000000000000;       // 6 000 000 000 000 000 000 =  6 Eth (soft cap) - crowdsale is considered success after this value
 
             /* mainnet live crowdsale deployment target values
             fundingMaxInWei = 160526000000000000000000; //160 500 000 000 000 000 000 000 = 160,050 Eth (hard cap) - crowdsale no longer accepts Eth after this value
