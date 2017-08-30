@@ -74,10 +74,10 @@ contract ERC20Interface is owned, SafeMath { // function and events security rev
 
 contract ARXCrowdsale is ERC20Interface {
     // deployment variables for dynamic supply token
-    string public constant standard               = "ARX";
-    string public constant name                   = "ARX";
-    string public constant symbol                 = "ARX";
-    uint8  public constant decimals               = 18;
+    string  public constant standard              = "ARX";
+    string  public constant name                  = "ARX";
+    string  public constant symbol                = "ARX";
+    uint8   public constant decimals              = 18;
     uint256 _totalSupply                          = 0;
 
     // multi-sig addresses and price variable
