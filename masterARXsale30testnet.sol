@@ -99,7 +99,7 @@ contract ARXCrowdsale is ERC20Interface {
     // loop control, ICO startup and limiters
     uint256 public fundingStartBlock;                           // crowdsale start block#
     uint256 public fundingEndBlock;                             // crowdsale end block#
-    bool    public isCrowdSaleComplete            = false;      // boolean for crowdsale completed or not
+    bool    public isCrowdSaleFinished            = false;      // boolean for crowdsale completed or not
     bool    public isCrowdSaleSetup               = false;      // boolean for crowdsale setup
     bool    public halted                         = false;      // boolean for halted or not
     bool    public founderTokensAvailable         = false;      // variable to set false after generating founderTokens
@@ -258,7 +258,7 @@ contract ARXCrowdsale is ERC20Interface {
       if (amount == 0) revert();
       if (TotalAfterContribution > fundingMaxInWei) revert();
       if (!(block.number >= fundingStartBlock && block.number <= fundingEndBlock)) revert();
-      if (isCrowdSaleComplete) revert();
+      if (isCrowdSaleFinished) revert();
 
       // 2. effects
       amountRaisedInWei = safeAdd(amountRaisedInWei,amount);
@@ -266,7 +266,7 @@ contract ARXCrowdsale is ERC20Interface {
       rewardTransferAmount = safeMul(amount,tokensPerEthPrice);
 
       if (amountRaisedInWei >= fundingMaxInWei) {
-        isCrowdSaleComplete = true;
+        isCrowdSaleFinished = true;
       }
 
       if (amountRaisedInWei >= fundingMinInWei) {
@@ -281,7 +281,7 @@ contract ARXCrowdsale is ERC20Interface {
     }
 
     function AllocateFounderTokens() onlyOwner {
-      if ((isCrowdSaleComplete) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
+      if ((isCrowdSaleFinished) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
           // calculate additional 10% tokens to allocate for foundation developer distributions
           foundationFundTokenCountInWei = safeDiv(amountRaisedInWei,10);
           foundationFundTokenCountInWei = safeMul(foundationFundTokenCountInWei,tokensPerEthPrice);
@@ -298,8 +298,8 @@ contract ARXCrowdsale is ERC20Interface {
 
     function beneficiaryMultiSigWithdraw(uint256 _amount) onlyOwner {
       // .transfer includes the revert() and is better practice than if !(x.send) revert();
-      if (isCrowdSaleComplete) {
-        // if crowdsale period completed allow multi-sig withdraw
+      if (isCrowdSaleFinished) {
+        // if crowdsale finished
         beneficiaryMultiSig.transfer(_amount);
       } else if ((halted) && (amountRaisedInWei >= fundingMinInWei)) {
         // if crowdsale emergency halted and minimum funding met
@@ -311,13 +311,14 @@ contract ARXCrowdsale is ERC20Interface {
     // check status and update crowdfund to complete if deadline expired
     function checkGoalReached() onlyOwner returns (bytes32 response) {
         if (amountRaisedInWei >= fundingMaxInWei) {
-            isCrowdSaleComplete = true;
+            isCrowdSaleFinished = true;
             founderTokensAvailable = true;
             return "Crowdsale funded to hardcap";
         } else if (block.number >= fundingEndBlock) {
-            isCrowdSaleComplete = true;
+            isCrowdSaleFinished = true;
             if (amountRaisedInWei >= fundingMinInWei) {
               founderTokensAvailable = true;
+              return "Crowdsale funded to mincap";
             }
             return "Crowdsale deadline passed";
         }
