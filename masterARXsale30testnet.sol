@@ -14,7 +14,7 @@ pragma solidity ^0.4.11;
 // https://github.com/assistivereality/ico/blob/master/3.0crowdsaletestsARXtestnet.txt
 // -------------------------------------------------
 
-contract owned {
+contract owned { // (security reviewed)
     address public owner;
     function owned() {
         owner = msg.sender;
@@ -28,7 +28,7 @@ contract owned {
     }
 }
 
-contract SafeMath {
+contract SafeMath { // (security reviewed)
   function safeMul(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a * b;
     safeAssert(a == 0 || c / a == b);
@@ -58,8 +58,8 @@ contract SafeMath {
   }
 }
 
-contract ERC20Interface is owned, SafeMath {
-    function totalSupply() constant returns (uint256 ARXtotalSupplyLong);
+contract ERC20Interface is owned, SafeMath { // function and events security reviewed
+    function totalSupply() constant returns (uint256 tokenTotalSupply);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
@@ -74,32 +74,37 @@ contract ERC20Interface is owned, SafeMath {
 
 contract ARXCrowdsale is ERC20Interface {
     // deployment variables for dynamic supply token
-    string public constant standard   =             "ARX";
-    string public constant name       =             "ARX";
-    string public constant symbol     =             "ARX";
-    uint8  public constant decimals   =             18;
-    uint256 _totalSupply              =             0;
+    string public constant standard               = "ARX";
+    string public constant name                   = "ARX";
+    string public constant symbol                 = "ARX";
+    uint8  public constant decimals               = 18;
+    uint256 _totalSupply                          = 0;
 
-    address public admin = owner;                   // admin address
-    uint256 public fundingStartBlock;               // crowdsale start block#
-    uint256 public fundingEndBlock;                 // crowdsale end block#
-    address public beneficiaryMultiSig;             // beneficiaryMultiSig (founder group) multi-sig wallet account
-    uint256 public tokensPerEthPrice;               // priceVar e.g. 20,000,000 tokens per Eth
-    uint256 public amountRaisedInWei;               // total amount raised in Wei e.g. 21 000 000 000 000 000 000 = 21 Eth
-    uint256 public fundingMaxInWei;                 // funding max in Wei e.g. 21 000 000 000 000 000 000 = 21 Eth
-    uint256 public fundingMinInWei;                 // funding min in Wei e.g. 11 000 000 000 000 000 000 = 11 Eth
-    uint256 public fundingMaxInEth;                 // funding max in Eth (approx) e.g. 21 Eth
-    uint256 public fundingMinInEth;                 // funding min in Eth (approx) e.g. 11 Eth
-    uint256 public foundationFundTokenCountLong;    // 10% additional tokens generated and sent to foundationFundMultisig/Assistive Reality foundation, 18 decimals
-    address public foundationFundMultisig;          // foundationFundMultisig multi-sig wallet address - Assistive Reality foundation fund
-    uint256 public remainingCapInWei;               // amount of cap remaining to raise in Wei e.g. 1 200 000 000 000 000 000 = 1.2 Eth remaining
-    uint256 public remainingCapInEth;               // amount of cap remaining to raise in Eth (approx) e.g. 1
-    bool    public isCrowdSaleComplete = false;     // boolean for crowdsale completed or not
-    bool    public isCrowdSaleSetup = false;        // boolean for crowdsale setup
-    bool    public halted = false;                  // boolean for halted or not
-    bool    public founderTokensAvailable = false;  // variable to set false after generating founderTokens
+    // multi-sig addresses and price variable
+    address public admin = owner;                               // admin address
+    address public beneficiaryMultiSig;                         // beneficiaryMultiSig (founder group) multi-sig wallet account
+    address public foundationFundMultisig;                      // foundationFundMultisig multi-sig wallet address - Assistive Reality foundation fund
+    uint256 public tokensPerEthPrice;                           // priceVar e.g. 2,000 tokens per Eth
 
-    // balances and transfer allowance arrays
+    // uint256 values for min,max,caps,tracking
+    uint256 public amountRaisedInWei;                           // total amount raised in Wei e.g. 21 000 000 000 000 000 000 = 21 Eth
+    uint256 public fundingMaxInWei;                             // funding max in Wei e.g. 21 000 000 000 000 000 000 = 21 Eth
+    uint256 public fundingMinInWei;                             // funding min in Wei e.g. 11 000 000 000 000 000 000 = 11 Eth
+    uint256 public fundingMaxInEth;                             // funding max in Eth (approx) e.g. 21 Eth
+    uint256 public fundingMinInEth;                             // funding min in Eth (approx) e.g. 11 Eth
+    uint256 public remainingCapInWei;                           // amount of cap remaining to raise in Wei e.g. 1 200 000 000 000 000 000 = 1.2 Eth remaining
+    uint256 public remainingCapInEth;                           // amount of cap remaining to raise in Eth (approx) e.g. 1
+    uint256 public foundationFundTokenCountInWei;               // 10% additional tokens generated and sent to foundationFundMultisig/Assistive Reality foundation, 18 decimals
+
+    // loop control, ICO startup and limiters
+    uint256 public fundingStartBlock;                           // crowdsale start block#
+    uint256 public fundingEndBlock;                             // crowdsale end block#
+    bool    public isCrowdSaleComplete            = false;      // boolean for crowdsale completed or not
+    bool    public isCrowdSaleSetup               = false;      // boolean for crowdsale setup
+    bool    public halted                         = false;      // boolean for halted or not
+    bool    public founderTokensAvailable         = false;      // variable to set false after generating founderTokens
+
+    // balance mapping and transfer allowance array (security reviewed)
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) allowed;
     event Buy(address indexed _sender, uint256 _eth, uint256 _ARX);
@@ -108,41 +113,42 @@ contract ARXCrowdsale is ERC20Interface {
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     event Refund(address indexed _refunder, uint256 _value);
 
+    // default function, map admin (security reviewed)
     function ARXCrowdsale() onlyOwner {
       admin = msg.sender;
     }
 
-    // total supply value for the token
-    function totalSupply() constant returns (uint256 ARXtotalSupplyLong) {
-        ARXtotalSupplyLong = _totalSupply;
+    // total number of tokens issued so far, normalised (security reviewed)
+    function totalSupply() constant returns (uint256 tokenTotalSupply) {
+        tokenTotalSupply = safeDiv(_totalSupply,1 ether);
     }
 
-    // get the account balance
+    // get the account balance (security reviewed)
     function balanceOf(address _owner) constant returns (uint256 balance) {
         return balances[_owner];
     }
 
-    // returns approximate crowdsale max funding in Eth
+    // returns approximate crowdsale max funding in Eth (security reviewed)
     function fundingMaxInEth() constant returns (uint256 fundingMaximumInEth) {
       fundingMaximumInEth = safeDiv(fundingMaxInWei,1 ether);
     }
 
-    // returns approximate crowdsale min funding in Eth
+    // returns approximate crowdsale min funding in Eth (security reviewed)
     function fundingMinInEth() constant returns (uint256 fundingMinimumInEth) {
       fundingMinimumInEth = safeDiv(fundingMinInWei,1 ether);
     }
 
-    // returns approximate crowdsale progress (funds raised) in Eth
+    // returns approximate crowdsale progress (funds raised) in Eth (security reviewed)
     function amountRaisedInEth() constant returns (uint256 amountRaisedSoFarInEth) {
       amountRaisedSoFarInEth = safeDiv(amountRaisedInWei,1 ether);
     }
 
-    // returns approximate crowdsale remaining cap (hardcap) in Eth
+    // returns approximate crowdsale remaining cap (hardcap) in Eth (security reviewed)
     function remainingCapInEth() constant returns (uint256 remainingHardCapInEth) {
       remainingHardCapInEth = safeDiv(remainingCapInWei,1 ether);
     }
 
-    // send tokens
+    // token transfer function (security reviewed, SafeMath)
     function transfer(address _to, uint256 _amount) returns (bool success) {
         if (_to == 0x0) revert();
         if (balances[msg.sender] >= _amount
@@ -159,7 +165,7 @@ contract ARXCrowdsale is ERC20Interface {
         }
     }
 
-    // another contract attempts to get the coins
+    // token transferFrom function (security reviewed, SafeMath)
     function transferFrom(
         address _from,
         address _to,
@@ -183,19 +189,19 @@ contract ARXCrowdsale is ERC20Interface {
         }
     }
 
-    // allow _spender to withdraw, multiple times, up to the _value amount.
+    // allow _spender to withdraw, multiple times, up to the _value amount (security reviewed)
     function approve(address _spender, uint256 _amount) returns (bool success) {
         allowed[msg.sender][_spender] = _amount;
         Approval(msg.sender, _spender, _amount);
         return true;
     }
 
-    // return allowance for given owner spender pair
+    // return allowance for given owner spender pair (security reviewed)
     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
         return allowed[_owner][_spender];
     }
 
-    // setup the CrowdSale parameters
+    // setup the CrowdSale parameters (security reviewed, SafeMath)
     function SetupCrowdsale(uint256 _fundingStartBlock, uint256 _fundingEndBlock) onlyOwner returns (bytes32 response) {
         if (msg.sender == admin && !(beneficiaryMultiSig > 0 && fundingMaxInWei > 0)) {
             // testnet values only
@@ -231,14 +237,14 @@ contract ARXCrowdsale is ERC20Interface {
         }
     }
 
-    // default payable function when sending ether to this contract
+    // default payable function when sending ether to this contract (security reviewed)
     function () payable {
       if (msg.data.length != 0) return;
       if (!isCrowdSaleSetup) revert();
       BuyTokens(); // removed parameter to simplify
     }
 
-    function BuyTokens() payable {
+    function BuyTokens() payable { // (security reviewed, SafeMath)
       // for a number of reasons (gas issue, load reduction, best practices) we are using beneficiaryMultiSigWithdraw instead of: (if (!beneficiaryMultiSig.send(msg.value)) revert()) at end of block #1 below;
       // 0. vars
       address recipient = msg.sender; // to simplify refunding, to prevent people buying on other's behalf, or even providing wrong address to receive - this overrides any manually entered recipient address to send tokens to msg.sender (ether sender)
@@ -277,13 +283,13 @@ contract ARXCrowdsale is ERC20Interface {
     function AllocateFounderTokens() onlyOwner {
       if ((isCrowdSaleComplete) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
         // calculate additional 10% tokens to allocate for foundation developer distributions
-          foundationFundTokenCountLong = safeDiv(amountRaisedInWei,10);
-          foundationFundTokenCountLong = safeMul(foundationFundTokenCountLong,tokensPerEthPrice);
+          foundationFundTokenCountInWei = safeDiv(amountRaisedInWei,10);
+          foundationFundTokenCountInWei = safeMul(foundationFundTokenCountInWei,tokensPerEthPrice);
           // generate and send foundation developer token distributions
-          balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundTokenCountLong);
-          _totalSupply = safeAdd(_totalSupply, foundationFundTokenCountLong);
-          Transfer(this, foundationFundMultisig, foundationFundTokenCountLong);
-          Buy(foundationFundMultisig, 0, foundationFundTokenCountLong);
+          balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundTokenCountInWei);
+          _totalSupply = safeAdd(_totalSupply, foundationFundTokenCountInWei);
+          Transfer(this, foundationFundMultisig, foundationFundTokenCountInWei);
+          Buy(foundationFundMultisig, 0, foundationFundTokenCountInWei);
           founderTokensAvailable = false;
       }
       //do nothing if all conditions don't match
