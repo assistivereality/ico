@@ -8,8 +8,8 @@ pragma solidity ^0.4.11;
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 31/08/2017
-// Functional reviews completed 31/08/2017
+// Security reviews completed 31/08/2017 [passed all]
+// Functional reviews completed 31/08/2017 [passed all]
 // Test results here (we encourage you to review):
 // https://github.com/assistivereality/ico/blob/master/3.0crowdsaletestsARXtestnet.txt
 // -------------------------------------------------

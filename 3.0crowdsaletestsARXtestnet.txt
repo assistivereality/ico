@@ -8,6 +8,7 @@ recent updates:
 // [Throw converted to revert() for all functions]
 // [Inbuilt symbol re-declaration modifications made]
 // [Variables changed from matching function names]
+// [Passed all tests 31/08/2017]
 --------------------------------------------------------
 1.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, fully funded crowdsale        (ARX)]
 2.release tested: [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, min funded crowdsale          (ARX)]
