@@ -282,9 +282,10 @@ contract ARXCrowdsale is ERC20Interface {
 
     function AllocateFounderTokens() onlyOwner {
       if ((isCrowdSaleComplete) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
-        // calculate additional 10% tokens to allocate for foundation developer distributions
+          // calculate additional 10% tokens to allocate for foundation developer distributions
           foundationFundTokenCountInWei = safeDiv(amountRaisedInWei,10);
           foundationFundTokenCountInWei = safeMul(foundationFundTokenCountInWei,tokensPerEthPrice);
+
           // generate and send foundation developer token distributions
           balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundTokenCountInWei);
           _totalSupply = safeAdd(_totalSupply, foundationFundTokenCountInWei);
