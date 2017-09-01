@@ -1,20 +1,21 @@
 pragma solidity ^0.4.11;
 // -------------------------------------------------
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
-// [v3.0 final released 31/08/2017 final masterARXsale30.sol]
+// [v3.0 final released 31/08/17/2017 final masterARXsale30.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
 // -------------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 31/08/2017 [passed all]
-// Functional reviews completed 31/08/2017 [passed all]
+// Security reviews completed 31/08/17/2017 [passed]
+// Functional reviews completed 31/08/17/2017 [passed]
+// Final code revision and regression test cycle complete 02/09/2017 [passed]
 // Test results here (we encourage you to review):
 // https://github.com/assistivereality/ico/blob/master/3.0crowdsaletestsARXtestnet.txt
 // -------------------------------------------------
 
-contract owned { // security reviewed 31/08
+contract owned { // security reviewed 31/08/17
     address public owner;
     function owned() {
         owner = msg.sender;
@@ -28,7 +29,7 @@ contract owned { // security reviewed 31/08
     }
 }
 
-contract SafeMath { // security reviewed 31/08
+contract SafeMath { // security reviewed 31/08/17
   function safeMul(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a * b;
     safeAssert(a == 0 || c / a == b);
@@ -58,7 +59,7 @@ contract SafeMath { // security reviewed 31/08
   }
 }
 
-contract ERC20Interface is owned, SafeMath { // security reviewed 31/08
+contract ERC20Interface is owned, SafeMath { // security reviewed 31/08/17
     function totalSupply() constant returns (uint256 tokenTotalSupply);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
@@ -72,7 +73,7 @@ contract ERC20Interface is owned, SafeMath { // security reviewed 31/08
     event Refund(address indexed _refunder, uint256 _value);
 }
 
-contract ARXCrowdsale is ERC20Interface { // security reviewed 31/08
+contract ARXCrowdsale is ERC20Interface { // security reviewed 02/09/17
     // deployment variables for dynamic supply token
     string  public constant standard              = "ARX";
     string  public constant name                  = "ARX";
