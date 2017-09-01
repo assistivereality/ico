@@ -311,8 +311,8 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 31/08
             founderTokensAvailable = true;
             return "Crowdsale funded to hardcap";
         } else if (block.number >= fundingEndBlock) {
-            isCrowdSaleFinished = true;
             if (amountRaisedInWei >= fundingMinInWei) {
+              isCrowdSaleFinished = true;
               founderTokensAvailable = true;
               return "Crowdsale funded to softcap";
             }
