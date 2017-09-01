@@ -205,8 +205,8 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 31/08
     function SetupCrowdsale(uint256 _fundingStartBlock, uint256 _fundingEndBlock) onlyOwner returns (bytes32 response) {
         if (msg.sender == admin && !(beneficiaryMultiSig > 0 && fundingMaxInWei > 0)) {
             // mainnet values
-            beneficiaryMultiSig = 0x6e537D243264b286E46C623C7c5CB65D12be81eA;
-            foundationFundMultisig = 0xA0170362e7a68bEAA754E0C35f3af0C6384236bD;
+            beneficiaryMultiSig = 0xd93333f8cb765397A5D0d0e0ba53A2899B48511f;
+            foundationFundMultisig = 0x70A0bE1a5d8A9F39afED536Ec7b55d87067371aA;
 
             // mainnet funding targets with 18 decimals
             fundingMaxInWei = 80000000000000000000000; //80 000 000 000 000 000 000 000 = 80,000 Eth (hard cap) - crowdsale no longer accepts Eth after this value
