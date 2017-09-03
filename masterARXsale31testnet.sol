@@ -1,27 +1,26 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.13;
 // -------------------------------------------------
-// [Assistive Reality ARC ERC20 token & crowdsale contract w/10% dev alloc]
-// [v3.0 final released 31/08/17/2017 final masterARCsale30.sol]
+// [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
+// [https://aronline.io/icoinfo]
+// [v3.0 final released 03/09/17 final masterARXsale30.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
 // -------------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 31/08/17/2017 [passed]
-// Functional reviews completed 31/08/17/2017 [passed]
-// Final code revision and regression test cycle complete 02/09/2017 [passed]
-// Test results here (we encourage you to review):
-// https://github.com/assistivereality/ico/blob/master/3.0crowdsaletestsARCtestnet.txt
+// Security reviews completed 03/09/17 [passed]
+// Functional reviews completed 03/09/17 [passed]
+// Final code revision and regression test cycle complete 03/09/17 [passed]
+// https://github.com/assistivereality/ico/blob/master/3.1crowdsaletestsARXmainnet.txt
 // -------------------------------------------------
-
-contract owned { // security reviewed 31/08/17
+contract owned { // security reviewed 03/09/17
     address public owner;
     function owned() {
         owner = msg.sender;
     }
     modifier onlyOwner {
-        if (msg.sender != owner) revert();
+        require(msg.sender == owner);
         _;
     }
     function transferOwnership(address newOwner) onlyOwner {
@@ -29,7 +28,7 @@ contract owned { // security reviewed 31/08/17
     }
 }
 
-contract SafeMath { // security reviewed 31/08/17
+contract SafeMath { // security reviewed 03/09/17
   function safeMul(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a * b;
     safeAssert(a == 0 || c / a == b);
@@ -59,25 +58,25 @@ contract SafeMath { // security reviewed 31/08/17
   }
 }
 
-contract ERC20Interface is owned, SafeMath { // security reviewed 31/08/17
+contract ERC20Interface is owned, SafeMath { // security reviewed 02/09/17
     function totalSupply() constant returns (uint256 tokenTotalSupply);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
     function approve(address _spender, uint256 _value) returns (bool success);
     function allowance(address _owner, address _spender) constant returns (uint256 remaining);
-    event Buy(address indexed _sender, uint256 _eth, uint256 _ARC);
+    event Buy(address indexed _sender, uint256 _eth, uint256 _ARX);
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Burn(address _from, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     event Refund(address indexed _refunder, uint256 _value);
 }
 
-contract ARCCrowdsale is ERC20Interface { // security reviewed 02/09/17
+contract ARXCrowdsale is ERC20Interface { // security reviewed 03/09/17
     // deployment variables for dynamic supply token
-    string  public constant standard              = "ARC";
-    string  public constant name                  = "ARC";
-    string  public constant symbol                = "ARC";
+    string  public constant standard              = "ARX";
+    string  public constant name                  = "ARX";
+    string  public constant symbol                = "ARX";
     uint8   public constant decimals              = 18;
     uint256 _totalSupply                          = 0;
 
@@ -108,14 +107,14 @@ contract ARCCrowdsale is ERC20Interface { // security reviewed 02/09/17
     // balance mapping and transfer allowance array
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) allowed;
-    event Buy(address indexed _sender, uint256 _eth, uint256 _ARC);
+    event Buy(address indexed _sender, uint256 _eth, uint256 _ARX);
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Burn(address _from, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     event Refund(address indexed _refunder, uint256 _value);
 
     // default function, map admin
-    function ARCCrowdsale() onlyOwner {
+    function ARXCrowdsale() onlyOwner {
       admin = msg.sender;
     }
 
@@ -151,13 +150,11 @@ contract ARCCrowdsale is ERC20Interface { // security reviewed 02/09/17
 
     // token transfer function
     function transfer(address _to, uint256 _amount) returns (bool success) {
-        if (_to == 0x0) revert();
-        if (balances[msg.sender] >= _amount
-            && _amount > 0
-            && safeAdd(balances[_to],_amount) > balances[_to]) {
-            uint256 senderBalance = balances[msg.sender];
-            senderBalance = safeSub(senderBalance, _amount);
-            balances[msg.sender] = senderBalance;
+        require(!(_to == 0x0));
+        if ((balances[msg.sender] >= _amount)
+        && (_amount > 0)
+        && ((safeAdd(balances[_to],_amount) > balances[_to]))) {
+            balances[msg.sender] = safeSub(balances[msg.sender], _amount);
             balances[_to] = safeAdd(balances[_to], _amount);
             Transfer(msg.sender, _to, _amount);
             return true;
@@ -171,17 +168,13 @@ contract ARCCrowdsale is ERC20Interface { // security reviewed 02/09/17
         address _from,
         address _to,
         uint256 _amount) returns (bool success) {
-        if (_to == 0x0) revert();
-        if (balances[_from] >= _amount
-            && allowed[_from][msg.sender] >= _amount
-            && _amount > 0
-            && safeAdd(balances[_to],_amount) > balances[_to]) {
-            uint256 senderFBalance = 0;
-            uint256 senderAllowBalance = 0;
-            senderFBalance = safeSub(balances[_from], _amount);
-            balances[_from] = senderFBalance;
-            senderAllowBalance = safeSub((allowed[_from][msg.sender]),_amount);
-            allowed[_from][msg.sender] = senderAllowBalance;
+        require(!(_to == 0x0));
+        if ((balances[_from] >= _amount)
+        && (allowed[_from][msg.sender] >= _amount)
+        && (_amount > 0)
+        && (safeAdd(balances[_to],_amount) > balances[_to])) {
+            balances[_from] = safeSub(balances[_from], _amount);
+            allowed[_from][msg.sender] = safeSub((allowed[_from][msg.sender]),_amount);
             balances[_to] = safeAdd(balances[_to], _amount);
             Transfer(_from, _to, _amount);
             return true;
@@ -204,16 +197,19 @@ contract ARCCrowdsale is ERC20Interface { // security reviewed 02/09/17
 
     // setup the CrowdSale parameters
     function SetupCrowdsale(uint256 _fundingStartBlock, uint256 _fundingEndBlock) onlyOwner returns (bytes32 response) {
-        if (msg.sender == admin && !(beneficiaryMultiSig > 0 && fundingMaxInWei > 0)) {
-            // testnet (compilers may warn ropsten addresses have invalid checksum)
+        if ((msg.sender == admin)
+        && (!(isCrowdSaleSetup))
+        && (!(beneficiaryMultiSig > 0))
+        && (!(fundingMaxInWei > 0))) {
+            // testnet
             beneficiaryMultiSig = 0x304Ce6aa8ABcf0c92A50Bc340554f5283D3DecaD;
             foundationFundMultisig = 0xEC69d8C88Cf1f6c67Fe03c5565E9876C3ABd1689;
 
             // testnet funding targets with 18 decimals
-            fundingMaxInWei = 50000000000000000000; //80 000 000 000 000 000 000 000 = 80,000 Eth (hard cap) - crowdsale no longer accepts Eth after this value
-            fundingMinInWei = 5000000000000000000;   //8 000 000 000 000 000 000 000 =  8,000 Eth (soft cap) - crowdsale is considered success after this value
+            fundingMaxInWei = 50000000000000000000; //80 000 000 000 000 000 000 = 50 Eth (hard cap) - crowdsale no longer accepts Eth after this value
+            fundingMinInWei = 5000000000000000000;   //8 000 000 000 000 000 000 =  5 Eth (soft cap) - crowdsale is considered success after this value
 
-            // value of ARC token for testnet
+            // value of ARX token for testnet
             tokensPerEthPrice = 2000; // 2,000 or 2000 tokens per Eth
 
             // update values
@@ -236,107 +232,112 @@ contract ARCCrowdsale is ERC20Interface { // security reviewed 02/09/17
 
     // default payable function when sending ether to this contract
     function () payable {
-      if (msg.data.length != 0) return;
-      if (!isCrowdSaleSetup) revert();
-      BuyTokens(); // removed parameter to simplify
+      require(msg.data.length == 0);
+      BuyTokens();
     }
 
     function BuyTokens() payable {
-      // for a number of reasons (gas issue, load reduction, best practices) we are using beneficiaryMultiSigWithdraw instead of: (if (!beneficiaryMultiSig.send(msg.value)) revert())
-      // 0. vars
-      address recipient = msg.sender; // to simplify refunding, to prevent people buying on other's behalf, or even providing wrong address to receive - this overrides any manually entered recipient address to send tokens to msg.sender (ether sender)
-      uint256 amount = msg.value;
-      uint256 TotalAfterContribution = safeAdd(amountRaisedInWei,amount);
-      uint256 rewardTransferAmount = 0;
+      // 0. conditions (length, crowdsale setup, zero check, exceed funding contrib check, contract valid check, within funding block range check, balance overflow check etc)
+      require((!(msg.value == 0))
+      && (!(halted))
+      && (isCrowdSaleSetup)
+      && (!((safeAdd(amountRaisedInWei,msg.value)) > fundingMaxInWei))
+      && (block.number >= fundingStartBlock)
+      && (block.number <= fundingEndBlock)
+      && (!(isCrowdSaleFinished)));
 
-      // 1. conditions (length, crowdsale setup, zero check, exceed funding contrib check, contract valid check, within funding block range check, balance overflow check etc)
-      if (halted) revert();
-      if (!isCrowdSaleSetup) revert();
-      if (amount == 0) revert();
-      if (TotalAfterContribution > fundingMaxInWei) revert();
-      if (!(block.number >= fundingStartBlock && block.number <= fundingEndBlock)) revert();
-      if (isCrowdSaleFinished) revert();
+      // 1. vars
+      address recipient = msg.sender; // to simplify refunding
+      uint256 amount = msg.value;
+      uint256 rewardTransferAmount = 0;
 
       // 2. effects
       amountRaisedInWei = safeAdd(amountRaisedInWei,amount);
       remainingCapInWei = safeSub(fundingMaxInWei,amountRaisedInWei);
       rewardTransferAmount = safeMul(amount,tokensPerEthPrice);
 
-      if (amountRaisedInWei >= fundingMaxInWei) {
-        isCrowdSaleFinished = true;
-      }
-
-      if (amountRaisedInWei >= fundingMinInWei) {
-        founderTokensAvailable = true;
-      }
-
       // 3. interaction
       balances[recipient] = safeAdd(balances[recipient], rewardTransferAmount);
       _totalSupply = safeAdd(_totalSupply, rewardTransferAmount);
       Transfer(this, recipient, rewardTransferAmount);
       Buy(recipient, amount, rewardTransferAmount);
+
+      if (amountRaisedInWei >= fundingMaxInWei) {
+        founderTokensAvailable = true;
+        isCrowdSaleFinished = true;
+      }
     }
 
     function AllocateFounderTokens() onlyOwner {
-      if ((isCrowdSaleFinished) && (amountRaisedInWei >= fundingMinInWei) && (founderTokensAvailable)) {
-          // calculate additional 10% tokens to allocate for foundation developer distributions
-          foundationFundTokenCountInWei = safeDiv(amountRaisedInWei,10);
-          foundationFundTokenCountInWei = safeMul(foundationFundTokenCountInWei,tokensPerEthPrice);
+      require((isCrowdSaleFinished)
+      && (founderTokensAvailable));
 
-          // generate and send foundation developer token distributions
-          balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundTokenCountInWei);
-          _totalSupply = safeAdd(_totalSupply, foundationFundTokenCountInWei);
-          Transfer(this, foundationFundMultisig, foundationFundTokenCountInWei);
-          Buy(foundationFundMultisig, 0, foundationFundTokenCountInWei);
-          founderTokensAvailable = false;
-      }
-      //do nothing if all conditions don't match
+      // calculate additional 10% tokens to allocate for foundation developer distributions
+      foundationFundTokenCountInWei = safeMul((safeDiv(amountRaisedInWei,10)), tokensPerEthPrice);
+
+      // generate and send foundation developer token distributions
+      balances[foundationFundMultisig] = safeAdd(balances[foundationFundMultisig], foundationFundTokenCountInWei);
+
+      _totalSupply = safeAdd(_totalSupply, foundationFundTokenCountInWei);
+      Transfer(this, foundationFundMultisig, foundationFundTokenCountInWei);
+      Buy(foundationFundMultisig, 0, foundationFundTokenCountInWei);
+      founderTokensAvailable = false;
     }
 
     function beneficiaryMultiSigWithdraw(uint256 _amount) onlyOwner {
-      // .transfer includes the revert() and is better practice than if !(x.send) revert();
-      if (isCrowdSaleFinished) {
-        // if crowdsale finished
-        beneficiaryMultiSig.transfer(_amount);
-      } else if ((halted) && (amountRaisedInWei >= fundingMinInWei)) {
-        // if crowdsale emergency halted and minimum funding met
-        beneficiaryMultiSig.transfer(_amount);
-      }
-      //do nothing if no conditions match
+      require (isCrowdSaleFinished);
+      beneficiaryMultiSig.transfer(_amount);
     }
 
-    // check status and update crowdfund to complete if deadline expired
+    // check status and update crowdfund to complete if funding cap reached or deadline expired
     function checkGoalReached() onlyOwner returns (bytes32 response) {
-        if (amountRaisedInWei >= fundingMaxInWei) {
-            isCrowdSaleFinished = true;
-            founderTokensAvailable = true;
-            return "Crowdsale funded to hardcap";
-        } else if (block.number >= fundingEndBlock) {
-            if (amountRaisedInWei >= fundingMinInWei) {
-              isCrowdSaleFinished = true;
-              founderTokensAvailable = true;
-              return "Crowdsale funded to softcap";
-            }
-            return "Crowdsale deadline passed";
+      require (!(isCrowdSaleFinished));
+
+      if (amountRaisedInWei < fundingMinInWei) {
+        if (block.number <= fundingEndBlock) {
+          founderTokensAvailable = false;
+          isCrowdSaleFinished = false;
+          return "In progress (Eth < Softcap)";
+        } else if (block.number > fundingEndBlock) {
+          founderTokensAvailable = false;
+          isCrowdSaleFinished = true;
+          return "Unsuccessful (Eth < Softcap)";
         }
-        return "Goal not reached yet";
+      } else if (amountRaisedInWei >= fundingMinInWei) {
+        if (amountRaisedInWei >= fundingMaxInWei) {
+          founderTokensAvailable = true;
+          isCrowdSaleFinished = true;
+          return "Successful (Eth >= Hardcap)";
+        } else if (amountRaisedInWei < fundingMaxInWei) {
+          if (block.number > fundingEndBlock) {
+            founderTokensAvailable = true;
+            isCrowdSaleFinished = true;
+            return "Successful (Eth >= Softcap)";
+          } else if (block.number <= fundingEndBlock) {
+            founderTokensAvailable = false;
+            isCrowdSaleFinished = false;
+            return "In progress (Eth > Softcap)";
+          }
+        }
+      }
     }
 
+    // any contributor can call this to have their Eth returned
     function refund() {
-      // halt protection
-      if (halted) revert();
-      // refunds available if soft cap not reached and deadline expires, each contributor can call refund() to get their funds back
-      if ((amountRaisedInWei < fundingMinInWei) && (block.number >= fundingEndBlock)) {
-        uint256 ARCbalance = balances[msg.sender];
-        if (ARCbalance == 0) revert();
-        balances[msg.sender] = 0;
-        _totalSupply = safeSub(_totalSupply, ARCbalance);
-        uint256 ethValue = safeDiv(ARCbalance, tokensPerEthPrice);
-        amountRaisedInWei = safeSub(amountRaisedInWei, ethValue);
-        msg.sender.transfer(ethValue);
-        Burn(msg.sender, ARCbalance);
-        Refund(msg.sender, ethValue);
-      }
+      // refunds available if not halted, soft cap not reached and deadline expires, each contributor can call refund() to get their funds back
+      require (!(halted)
+      && (amountRaisedInWei < fundingMinInWei)
+      && (block.number > fundingEndBlock)
+      && (balances[msg.sender] > 0));
+
+      uint256 ARXbalance = balances[msg.sender];
+      balances[msg.sender] = 0;
+      _totalSupply = safeSub(_totalSupply, ARXbalance);
+      uint256 ethValue = safeDiv(ARXbalance, tokensPerEthPrice);
+      amountRaisedInWei = safeSub(amountRaisedInWei, ethValue);
+      msg.sender.transfer(ethValue);
+      Burn(msg.sender, ARXbalance);
+      Refund(msg.sender, ethValue);
     }
 
     // halt the crowdsale

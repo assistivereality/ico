@@ -1,0 +1,66 @@
+--------------------------------------------------------
+Assistive Reality
+Crowdsale smart contract testing
+https://aronline.io/icoinfo
+--------------------------------------------------------
+recent updates:
+// [Math operations migrated to SafeMath equivalent]
+// [Compiler version switched to .13, adopted require(x)]
+// [Inbuilt symbol re-declaration modifications made]
+// [Variables changed from matching function names]
+// [Passed all tests 03/09/17]
+--------------------------------------------------------
+1.release tested:   [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, fully funded crowdsale        (ARX)]
+2.release tested:   [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, min funded crowdsale          (ARX)]
+3.release tested:   [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, failed crowdsale w/refunds    (ARV)]
+4.release tested:   [v2.9 released 21/08/2017 final masterARsale29.sol, fully funded crowdsale            (ARX)]
+5.release tested:   [v3.0 released 30/08/2017 final masterARsale30.sol, min funded crowdsale              (ARX)]
+6.release tested:   [v3.0 released 30/08/2017 final masterARsale30.sol, failed crowdsale w/refunds        (ARX)]
+7.release tested:   [v3.0 released 31/08/2017 final masterARsale30.sol, fully funded crowdsale            (ARX)]
+8.release tested:   [v3.1 released 03/09/2017 final masterARsale31.sol, min funded crowdsale              (ARX)]
+9.release tested:   [v3.1 released 03/09/2017 final masterARsale31.sol, failed crowdsale w/refunds        (ARX)]
+10.release tested:  [v3.1 released 03/09/2017 final masterARsale31.sol, fully funded crowdsale            (ARX)]
+--------------------------------------------------------
+test runs:
+[6][7][8][9][10]
+------------
+[X][X][X][X][ ]	(Crowdsale)  test1:  Verify only owner can initiate crowdsale or setup parameters.
+[X][X][X][X][ ]	(Crowdsale)  test2:  Crowdsale is properly initialized with given parameters.
+[X][X][X][X][ ]	(Crowdsale)  test3:  Verify prevention of post-init modification crowdsale parameters.
+[X][X][X][X][ ]	(Crowdsale)  test4:  User cannot participate to the crowdsale too early via BuyTokens.
+[X][X][X][X][ ]	(Crowdsale)  test5:  User cannot participate to the crowdsale too early via sending eth.
+[X][X][X][X][ ]	(Crowdsale)  test6:  Check the checkGoalReached function interacts with isCrowdsaleCompleted variable as desired.
+[X][X][X][X][ ]	(Crowdsale)  test7:  Users sending eth to crowdsale address successfully buy token at the correct price (input in Eth).
+[X][X][X][X][ ]	(Crowdsale)  test8:  Users can buy tokens via BuyTokens function at the correct price (input in Eth).
+[X][X][X][X][ ]	(Crowdsale)  test9:  Users cannot purchase tokens via BuyTokens when crowdsale is halted.
+[X][X][X][X][ ]	(Crowdsale)  test10: Users cannot purchase tokens via sending eth when crowdsale is halted.
+[X][X][X][X][ ]	(Crowdsale)  test11: Watch token and Watch contract(crowdsale) via address and JSON functions as intended.
+[X][X][X][X][ ]	(Crowdsale)  test12: Users can purchase tokens via both methods (sending Eth, or executing BuyTokens) when crowdsale is resumed.
+[X][X][X][X][ ]	(Crowdsale)  test13: Users cannot exceed the maxFundingCap under any combination of conditions.
+[X][X][X][X][ ]	(Crowdsale)  test14: Crowdsale flags as completed when checkGoalReached is executed under correct conditions.
+[X][X][X][X][ ]	(Crowdsale)  test15: User cannot purchase tokens when crowdsale is completed via either method.
+[X][X][X][X][ ]	(Crowdsale)  test16: +10% of total generated tokens are sent to foundation post-sale when founder runs AllocateFounderTokens.
+[X][X][X][X][ ]	(Crowdsale)  test17: Founder can execute BeneficiaryWithdraw post-sale if min-funded or higher to transfer raised Eth to multi-sig wallet.
+[X][X][X][X][ ]	(Crowdsale)  test18: User purchased, and foundation allocated tokens are generated, sent, and their purchase recorded correctly.
+[X][X][X][X][ ]	(Crowdsale)  test19: Integer Overflow protection working.
+[X][X][X][X][ ]	(Crowdsale)  test20: Verify refunds work, based on soft cap not reached & crowdsale deadline expired. User executes refund() &gets Eth.
+[X][X][X][X][ ]	(Crowdsale)  test21: Test checkGoalReached successfully updates status if deadline has expired.
+[X][X][X][X][ ]	(Crowdsale)  test22: Verify security and run conditions on checkGoalReached and refund functions.
+[X][X][X][X][ ]	(Crowdsale)  test23: Only original owner can execute ownership protected functions (halt, unhalt).
+[X][X][X][X][ ]	(Crowdsale)  test24: Verify founderTokensAvailable starts false & becomes true only when max funded or expired & above min funding cap.
+[X][X][X][X][ ]	(Crowdsale)  test25: Verify BuyToken only sends to msg.sender even if overriden (required for refunds).
+[X][X][X][X][ ]	(ERC-20) test26: ERC-20 compatible transfer() is available and functional.
+[X][X][X][X][ ]	(ERC-20) test27: ERC-20 transfer fails if user exceeds his/her balance.
+[X][X][X][X][ ]	(ERC-20) test28: ERC-20 compatible transferFrom() is available and functional.
+[X][X][X][X][ ]	(ERC-20) test29: User can set allowance approval list for transfers.
+[X][X][X][X][ ]	(ERC-20) test30: Tokens can be transferred with ECR-20 allowance approval.
+[X][X][X][X][ ]	(ERC-20) test31: TransferFrom fails if user exceeds his/her allowance or from balance.
+[X][X][X][X][ ]	(ERC-20) test32: User cannot transfer more than approved allowance.
+[X][X][X][X][ ]	(Crowdsale)  test33:
+[X][X][X][X][ ]	(Crowdsale)  test34: Throw functions within crowdsale migrated to revert() and working as intended.
+[X][X][X][X][ ]	(Crowdsale)  test35: Transition from multiple reverts to require(x) for condition tests, verify all working.
+[X][X][X][X][ ]	(Crowdsale)  test36: Optimised for gas usage
+[X][X][X][X][ ]	(Crowdsale)  test37: Full regression test of all tests 1-36 for 3.1 revision(s) of contract.
+--------------------------------------------------------
+[X][X][X][X][ ] [verified]
+--------------------------------------------------------
