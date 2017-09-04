@@ -34,8 +34,8 @@ test runs:
 [X][X][X][X][X]	(Crowdsale)  test8:  Users can buy tokens via BuyTokens function at the correct price (input in Eth).
 [X][X][X][X][ ]	(Crowdsale)  test9:  Users cannot purchase tokens via BuyTokens when crowdsale is halted.
 [X][X][X][X][ ]	(Crowdsale)  test10: Users cannot purchase tokens via sending eth when crowdsale is halted.
-[X][X][X][X][ ]	(Crowdsale)  test11: Watch token and Watch contract(crowdsale) via address and JSON functions as intended.
-[X][X][X][X][ ]	(Crowdsale)  test12: Users can purchase tokens via both methods (sending Eth, or executing BuyTokens) when crowdsale is resumed.
+[X][X][X][X][X]	(Crowdsale)  test11: Watch token and Watch contract(crowdsale) via address and JSON functions as intended.
+[X][X][X][X][ ]	(Crowdsale)  test12: Users can purchase tokens via both methods (sending Eth, or executing BuyTokens) when crowdsale is resumed from halt.
 [X][X][X][X][ ]	(Crowdsale)  test13: Users cannot exceed the maxFundingCap under any combination of conditions.
 [X][X][X][X][ ]	(Crowdsale)  test14: Crowdsale flags as completed when checkGoalReached is executed under correct conditions.
 [X][X][X][X][ ]	(Crowdsale)  test15: User cannot purchase tokens when crowdsale is completed via either method.
@@ -48,7 +48,7 @@ test runs:
 [X][X][X][X][ ]	(Crowdsale)  test22: Verify security and run conditions on checkGoalReached and refund functions.
 [X][X][X][X][ ]	(Crowdsale)  test23: Only original owner can execute ownership protected functions (halt, unhalt).
 [X][X][X][X][ ]	(Crowdsale)  test24: Verify founderTokensAvailable starts false & becomes true only when max funded or expired & above min funding cap.
-[X][X][X][X][ ]	(Crowdsale)  test25: Verify BuyToken only sends to msg.sender even if overriden (required for refunds).
+[X][X][X][X][ ]	(Crowdsale)  test25: Verify BuyToken only sends to msg.sender (required for refunds).
 [X][X][X][X][ ]	(ERC-20) test26: ERC-20 compatible transfer() is available and functional.
 [X][X][X][X][ ]	(ERC-20) test27: ERC-20 transfer fails if user exceeds his/her balance.
 [X][X][X][X][ ]	(ERC-20) test28: ERC-20 compatible transferFrom() is available and functional.
@@ -57,8 +57,8 @@ test runs:
 [X][X][X][X][ ]	(ERC-20) test31: TransferFrom fails if user exceeds his/her allowance or from balance.
 [X][X][X][X][ ]	(ERC-20) test32: User cannot transfer more than approved allowance.
 [X][X][X][X][ ]	(Crowdsale)  test33:
-[X][X][X][X][ ]	(Crowdsale)  test34: Throw functions within crowdsale migrated to revert() and working as intended.
-[X][X][X][X][ ]	(Crowdsale)  test35: Transition from multiple reverts to require(x) for condition tests, verify all working.
+[X][X][X][X][ ]	(Crowdsale)  test34: revert() functions within crowdsale (migrated from throw) working as intended
+[X][X][X][X][ ]	(Crowdsale)  test35: transition from multiple reverts to require(x) for condition tests, verify all working.
 [X][X][X][X][ ]	(Crowdsale)  test36: Optimised for gas usage
 [X][X][X][X][ ]	(Crowdsale)  test37: Full regression test of all tests 1-36 for 3.1 revision(s) of contract.
 --------------------------------------------------------

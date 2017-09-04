@@ -268,7 +268,7 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
     }
 
     function AllocateFounderTokens() onlyOwner {
-      require(isCrowdSaleFinished && founderTokensAvailable);
+      require(isCrowdSaleFinished && founderTokensAvailable && (foundationFundTokenCountInWei == 0));
 
       // calculate additional 10% tokens to allocate for foundation developer distributions
       foundationFundTokenCountInWei = safeMul((safeDiv(amountRaisedInWei,10)), tokensPerEthPrice);
@@ -306,15 +306,29 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
         CurrentStatus = "Unsuccessful (Eth < Softcap)";
         return "Unsuccessful (Eth < Softcap)";
       } else if ((amountRaisedInWei >= fundingMinInWei) && (amountRaisedInWei >= fundingMaxInWei)) { // ICO ended, at hardcap!
-        founderTokensAvailable = true;
-        isCrowdSaleFinished = true;
-        CurrentStatus = "Successful (Eth >= Hardcap)!";
-        return "Successful (Eth >= Hardcap)!";
+        if (foundationFundTokenCountInWei == 0) {
+          founderTokensAvailable = true;
+          isCrowdSaleFinished = true;
+          CurrentStatus = "Successful (Eth >= Hardcap)!";
+          return "Successful (Eth >= Hardcap)!";
+        } else if (foundationFundTokenCountInWei > 0) {
+          founderTokensAvailable = false;
+          isCrowdSaleFinished = true;
+          CurrentStatus = "Successful (Eth >= Hardcap)!";
+          return "Successful (Eth >= Hardcap)!";
+        }
       } else if ((amountRaisedInWei >= fundingMinInWei) && (amountRaisedInWei < fundingMaxInWei) && (block.number > fundingEndBlock)) { // ICO ended, over softcap!
-        founderTokensAvailable = true;
-        isCrowdSaleFinished = true;
-        CurrentStatus = "Successful (Eth >= Softcap)!";
-        return "Successful (Eth >= Softcap)!";
+        if (foundationFundTokenCountInWei == 0) {
+          founderTokensAvailable = true;
+          isCrowdSaleFinished = true;
+          CurrentStatus = "Successful (Eth >= Softcap)!";
+          return "Successful (Eth >= Softcap)!";
+        } else if (foundationFundTokenCountInWei > 0) {
+          founderTokensAvailable = false;
+          isCrowdSaleFinished = true;
+          CurrentStatus = "Successful (Eth >= Softcap)!";
+          return "Successful (Eth >= Softcap)!";
+        }
       } else if ((amountRaisedInWei >= fundingMinInWei) && (amountRaisedInWei < fundingMaxInWei) && (block.number <= fundingEndBlock)) { // ICO in progress, over softcap!
         founderTokensAvailable = false;
         isCrowdSaleFinished = false;
