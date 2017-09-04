@@ -118,7 +118,7 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
     // default function, map admin
     function ARXCrowdsale() onlyOwner {
       admin = msg.sender;
-      CurrentStatus = "Crowdsale initiated";
+      CurrentStatus = "Crowdsale deployed to chain";
     }
 
     // total number of tokens issued so far, normalised
@@ -297,8 +297,8 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
       } else if ((amountRaisedInWei < fundingMinInWei) && (block.number < fundingStartBlock)) { // ICO has not started
         founderTokensAvailable = false;
         isCrowdSaleFinished = false;
-        CurrentStatus = "Crowdsale has not started";
-        return "Crowdsale has not started";
+        CurrentStatus = "Crowdsale is setup";
+        return "Crowdsale is setup";
       } else if ((amountRaisedInWei < fundingMinInWei) && (block.number > fundingEndBlock)) { // ICO ended, under softcap
         founderTokensAvailable = false;
         isCrowdSaleFinished = true;
