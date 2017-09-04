@@ -8,7 +8,7 @@ recent updates:
 // [Compiler version switched to .13, adopted require(x)]
 // [Inbuilt symbol re-declaration modifications made]
 // [Variables changed from matching function names]
-// [Passed all tests 03/09/17]
+// [Passed all tests 04/09/17]
 --------------------------------------------------------
 1.release tested:   [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, fully funded crowdsale        (ARX)]
 2.release tested:   [v2.8 RC3 released 10/07/2017 final masterARsale28.sol, min funded crowdsale          (ARX)]
@@ -17,9 +17,9 @@ recent updates:
 5.release tested:   [v3.0 released 30/08/2017 final masterARsale30.sol, min funded crowdsale              (ARX)]
 6.release tested:   [v3.0 released 30/08/2017 final masterARsale30.sol, failed crowdsale w/refunds        (ARX)]
 7.release tested:   [v3.0 released 31/08/2017 final masterARsale30.sol, fully funded crowdsale            (ARX)]
-8.release tested:   [v3.1 released 03/09/2017 final masterARsale31.sol, min funded crowdsale              (ARX)]
-9.release tested:   [v3.1 released 03/09/2017 final masterARsale31.sol, failed crowdsale w/refunds        (ARX)]
-10.release tested:  [v3.1 released 03/09/2017 final masterARsale31.sol, fully funded crowdsale            (ARX)]
+8.release tested:   [v3.1 released 04/09/2017 final masterARsale31.sol, min funded crowdsale              (ARX)]
+9.release tested:   [v3.1 released 04/09/2017 final masterARsale31.sol, failed crowdsale w/refunds        (ARX)]
+10.release tested:  [v3.1 released 04/09/2017 final masterARsale31.sol, fully funded crowdsale            (ARX)]
 --------------------------------------------------------
 test runs:
 [6][7][8][9][10]
