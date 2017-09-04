@@ -225,8 +225,8 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 04/09/17
 
             // configure crowdsale
             isCrowdSaleSetup = true;
-            return "Crowdsale is setup";
             CurrentStatus = "Crowdsale is setup";
+            return "Crowdsale is setup";
         } else if (msg.sender != admin) {
             return "not authorized";
         } else  {
