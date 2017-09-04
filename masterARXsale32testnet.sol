@@ -288,7 +288,8 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
     }
 
     function checkGoalReached() onlyOwner returns (bytes32 response) { // return crowdfund status to owner for each result case, update public constant
-      require (!(halted));
+      require (!(halted) && isCrowdSaleSetup);
+
       if ((amountRaisedInWei < fundingMinInWei) && (block.number <= fundingEndBlock && block.number >= fundingStartBlock)) { // ICO in progress, under softcap
         founderTokensAvailable = false;
         isCrowdSaleFinished = false;
