@@ -24,14 +24,14 @@ recent updates:
 test runs:
 [6][7][8][9][10]
 ------------
-[X][X][X][X][ ]	(Crowdsale)  test1:  Verify only owner can initiate crowdsale or setup parameters.
-[X][X][X][X][ ]	(Crowdsale)  test2:  Crowdsale is properly initialized with given parameters.
-[X][X][X][X][ ]	(Crowdsale)  test3:  Verify prevention of post-init modification crowdsale parameters.
-[X][X][X][X][ ]	(Crowdsale)  test4:  User cannot participate to the crowdsale too early via BuyTokens.
-[X][X][X][X][ ]	(Crowdsale)  test5:  User cannot participate to the crowdsale too early via sending eth.
-[X][X][X][X][ ]	(Crowdsale)  test6:  Check the checkGoalReached function interacts with isCrowdsaleCompleted variable as desired.
-[X][X][X][X][ ]	(Crowdsale)  test7:  Users sending eth to crowdsale address successfully buy token at the correct price (input in Eth).
-[X][X][X][X][ ]	(Crowdsale)  test8:  Users can buy tokens via BuyTokens function at the correct price (input in Eth).
+[X][X][X][X][X]	(Crowdsale)  test1:  Verify only owner can initiate crowdsale or setup parameters.
+[X][X][X][X][X]	(Crowdsale)  test2:  Crowdsale is properly initialized with given parameters.
+[X][X][X][X][X]	(Crowdsale)  test3:  Verify prevention of post-init modification crowdsale parameters.
+[X][X][X][X][X]	(Crowdsale)  test4:  User cannot participate to the crowdsale too early via BuyTokens.
+[X][X][X][X][X]	(Crowdsale)  test5:  User cannot participate to the crowdsale too early via sending eth.
+[X][X][X][X][/]	(Crowdsale)  test6:  Check the checkGoalReached function interacts with isCrowdsaleCompleted variable as desired.
+[X][X][X][X][X]	(Crowdsale)  test7:  Users sending eth to crowdsale address successfully buy token at the correct price (input in Eth).
+[X][X][X][X][X]	(Crowdsale)  test8:  Users can buy tokens via BuyTokens function at the correct price (input in Eth).
 [X][X][X][X][ ]	(Crowdsale)  test9:  Users cannot purchase tokens via BuyTokens when crowdsale is halted.
 [X][X][X][X][ ]	(Crowdsale)  test10: Users cannot purchase tokens via sending eth when crowdsale is halted.
 [X][X][X][X][ ]	(Crowdsale)  test11: Watch token and Watch contract(crowdsale) via address and JSON functions as intended.

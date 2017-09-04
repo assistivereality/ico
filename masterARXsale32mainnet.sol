@@ -283,7 +283,7 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
     }
 
     function beneficiaryMultiSigWithdraw(uint256 _amount) onlyOwner {
-      require(isCrowdSaleFinished && founderTokensAvailable);
+      require(isCrowdSaleFinished && (amountRaisedInWei >= fundingMinInWei));
       beneficiaryMultiSig.transfer(_amount);
     }
 
