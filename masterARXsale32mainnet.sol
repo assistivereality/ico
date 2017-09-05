@@ -1,16 +1,18 @@
 pragma solidity ^0.4.13;
-// -------------------------------------------------
+// **-----------------------------------------------
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
 // [https://aronline.io/icoinfo]
 // [v3.2 final released 05/09/17 final masterARXsale32mainnet.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
-// -------------------------------------------------
+// [Join us in changing the world]
+// [aronline.io]
+// **-----------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 05/09/17 [passed]
-// Functional reviews completed 05/09/17 [passed]
+// Security reviews completed 05/09/17 [passed OK]
+// Functional reviews completed 05/09/17 [passed OK]
 // Final code revision and regression test cycle complete 05/09/17 [passed]
 // https://github.com/assistivereality/ico/blob/master/3.2crowdsaletestsARXmainnet.txt
 // -------------------------------------------------
@@ -209,11 +211,11 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
             foundationFundMultisig = 0x70A0bE1a5d8A9F39afED536Ec7b55d87067371aA;
 
             // mainnet funding targets with 18 decimals
-            fundingMaxInWei = 80000000000000000000000; //80 000 000 000 000 000 000 000 = 80,000 Eth (hard cap) - crowdsale no longer accepts Eth after this value
-            fundingMinInWei = 8000000000000000000000;   //8 000 000 000 000 000 000 000 =  8,000 Eth (soft cap) - crowdsale is considered success after this value
+            fundingMaxInWei = 70000000000000000000000; //70 000 000 000 000 000 000 000 = 70,000 Eth (hard cap) - crowdsale no longer accepts Eth after this value
+            fundingMinInWei = 7000000000000000000000;   //7 000 000 000 000 000 000 000 =  7,000 Eth (soft cap) - crowdsale is considered success after this value
 
-            // value of ARX token for mainnet. if hardcap is reached, this results in 160,000,000 ARX tokens in general supply (+16,000,000 in the foundationFundMultisig)
-            tokensPerEthPrice = 2000; // 2,000 or 2000 tokens per Eth
+            // value of ARX token for mainnet. if hardcap is reached, this results in 280,000,000 ARX tokens in general supply (+28,000,000 in the foundationFundMultisig for a total supply of 308,000,000)
+            tokensPerEthPrice = 4000; // 4,000 tokens per Eth
 
             // update values
             fundingMaxInEth = safeDiv(fundingMaxInWei,1 ether); //approximate to 1 Eth due to resolution, provided for ease/viewing only

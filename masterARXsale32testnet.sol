@@ -5,12 +5,14 @@ pragma solidity ^0.4.13;
 // [v3.2 final released 05/09/17 final masterARXsale32mainnet.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
+// [Join us in changing the world]
+// [aronline.io]
 // -------------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 05/09/17 [passed]
-// Functional reviews completed 05/09/17 [passed]
+// Security reviews completed 05/09/17 [passed OK]
+// Functional reviews completed 05/09/17 [passed OK]
 // Final code revision and regression test cycle complete 05/09/17 [passed]
 // https://github.com/assistivereality/ico/blob/master/3.2crowdsaletestsARXmainnet.txt
 // -------------------------------------------------

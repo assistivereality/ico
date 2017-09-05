@@ -2,6 +2,7 @@
 Assistive Reality
 Crowdsale smart contract testing
 https://aronline.io/icoinfo
+3.2 published live to 
 --------------------------------------------------------
 recent updates:
 // [Math operations migrated to SafeMath equivalent]
@@ -43,24 +44,24 @@ test runs:
 [X][X][X][X][X]	(Crowdsale)  test17: Founder can execute BeneficiaryWithdraw post-sale if min-funded or higher to transfer raised Eth to multi-sig wallet.
 [X][X][X][X][X]	(Crowdsale)  test18: User purchased, and foundation allocated tokens are generated, sent, and their purchase recorded correctly.
 [X][X][X][X][X]	(Crowdsale)  test19: Integer Overflow protection working.
-[X][X][X][X][ ]	(Crowdsale)  test20: Verify refunds work, based on soft cap not reached & crowdsale deadline expired. User executes refund() &gets Eth.
+[X][X][X][X][X]	(Crowdsale)  test20: Verify refunds work, based on soft cap not reached & crowdsale deadline expired. User executes refund() &gets Eth.
 [X][X][X][X][X]	(Crowdsale)  test21: Test checkGoalReached successfully updates status if deadline has expired.
 [X][X][X][X][X]	(Crowdsale)  test22: Verify security and run conditions on checkGoalReached and refund functions.
 [X][X][X][X][X]	(Crowdsale)  test23: Only original owner can execute ownership protected functions (halt, unhalt).
 [X][X][X][X][X]	(Crowdsale)  test24: Verify founderTokensAvailable starts false & becomes true only when max funded or expired & above min funding cap.
 [X][X][X][X][X]	(Crowdsale)  test25: Verify BuyToken only sends to msg.sender (required for refunds).
-[X][X][X][X][ ]	(ERC-20) test26: ERC-20 compatible transfer() is available and functional.
-[X][X][X][X][ ]	(ERC-20) test27: ERC-20 transfer fails if user exceeds his/her balance.
-[X][X][X][X][ ]	(ERC-20) test28: ERC-20 compatible transferFrom() is available and functional.
-[X][X][X][X][ ]	(ERC-20) test29: User can set allowance approval list for transfers.
-[X][X][X][X][ ]	(ERC-20) test30: Tokens can be transferred with ECR-20 allowance approval.
-[X][X][X][X][ ]	(ERC-20) test31: TransferFrom fails if user exceeds his/her allowance or from balance.
-[X][X][X][X][ ]	(ERC-20) test32: User cannot transfer more than approved allowance.
-[X][X][X][X][ ]	(Crowdsale)  test33:
+[X][X][X][X][X]	(ERC-20) test26: ERC-20 compatible transfer() is available and functional.
+[X][X][X][X][X]	(ERC-20) test27: ERC-20 transfer fails if user exceeds his/her balance.
+[X][X][X][X][X]	(ERC-20) test28: ERC-20 compatible transferFrom() is available and functional.
+[X][X][X][X][X]	(ERC-20) test29: User can set allowance approval list for transfers.
+[X][X][X][X][X]	(ERC-20) test30: Tokens can be transferred with ECR-20 allowance approval.
+[X][X][X][X][X]	(ERC-20) test31: TransferFrom fails if user exceeds his/her allowance or from balance.
+[X][X][X][X][X]	(ERC-20) test32: User cannot transfer more than approved allowance.
+[X][X][X][X][X]	(Crowdsale)  test33: (removed)
 [X][X][X][X][X]	(Crowdsale)  test34: revert() functions within crowdsale (migrated from throw) working as intended
 [X][X][X][X][X]	(Crowdsale)  test35: transition from multiple reverts to require(x) for condition tests, verify all working.
 [X][X][X][X][X]	(Crowdsale)  test36: Optimised for gas usage
-[X][X][X][X][/]	(Crowdsale)  test37: Full regression test of all tests 1-36 for 3.1 revision(s) of contract.
+[X][X][X][X][X]	(Crowdsale)  test37: Full regression test of all tests 1-36 for 3.1 revision(s) of contract.
 --------------------------------------------------------
-[X][X][X][X][ ] [verified]
+[X][X][X][X][X] [verified]
 --------------------------------------------------------
