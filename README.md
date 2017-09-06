@@ -1,4 +1,2 @@
-# ico
-ICO contracts
-masterARXsale32mainnet.sol - final mainnet ARX token ICO contract
-masterARXsale32testnet.sol - final testnet ARX token ICO contract
+# Assistive Reality ICO & ARX token
+masterARXsale32mainnet.sol - final mainnet contract, starts block 4296250 / September 26 2017
