@@ -1,4 +1,3 @@
-# ico
-ICO contracts
+# Assistive Reality ICO September 2017 - ARX token
 masterARXsale32mainnet.sol - final mainnet ARX token ICO contract
-masterARXsale32testnet.sol - final testnet ARX token ICO contract
+
