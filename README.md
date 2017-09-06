@@ -1,3 +1,2 @@
-# Assistive Reality ICO September 2017 - ARX token
-masterARXsale32mainnet.sol - final mainnet ARX token ICO contract
-
+# Assistive Reality ICO & ARX token
+masterARXsale32mainnet.sol - final mainnet contract, starts block 4296250
