@@ -1,5 +1,6 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.13;
 // **-----------------------------------------------
+// 0.4.13+commit.0fb4cb1a
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
 // [https://aronline.io/icoinfo]
 // [v3.2 final released 10/09/17 final masterARXsale32mainnet.sol]
@@ -133,22 +134,22 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 10/09/17
         return balances[_owner];
     }
 
-    // returns approximate crowdsale max funding in Eth
+    // returns crowdsale max funding in Eth, low res
     function fundingMaxInEth() constant returns (uint256 fundingMaximumInEth) {
       fundingMaximumInEth = safeDiv(fundingMaxInWei,1 ether);
     }
 
-    // returns approximate crowdsale min funding in Eth
+    // returns crowdsale min funding in Eth, low res
     function fundingMinInEth() constant returns (uint256 fundingMinimumInEth) {
       fundingMinimumInEth = safeDiv(fundingMinInWei,1 ether);
     }
 
-    // returns approximate crowdsale progress (funds raised) in Eth
+    // returns crowdsale progress (funds raised) in Eth, low res
     function amountRaisedInEth() constant returns (uint256 amountRaisedSoFarInEth) {
       amountRaisedSoFarInEth = safeDiv(amountRaisedInWei,1 ether);
     }
 
-    // returns approximate crowdsale remaining cap (hardcap) in Eth
+    // returns crowdsale remaining cap (hardcap) in Eth, low res
     function remainingCapInEth() constant returns (uint256 remainingHardCapInEth) {
       remainingHardCapInEth = safeDiv(remainingCapInWei,1 ether);
     }
@@ -191,6 +192,7 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 10/09/17
     // ERC20 allow _spender to withdraw, multiple times, up to the _value amount
     function approve(address _spender, uint256 _amount) returns (bool success) {
         //Fix for known double-spend https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit#
+        //Input must either set allow amount to 0, or have 0 already set, to workaround issue
         require((_amount == 0) || (allowed[msg.sender][_spender] == 0));
         allowed[msg.sender][_spender] = _amount;
         Approval(msg.sender, _spender, _amount);
@@ -214,7 +216,7 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 10/09/17
 
             // mainnet funding targets with 18 decimals
             fundingMaxInWei = 70000000000000000000000; //70 000 000 000 000 000 000 000 = 70,000 Eth (hard cap) - crowdsale no longer accepts Eth after this value
-            fundingMinInWei = 7000000000000000000000;   //7 000 000 000 000 000 000 000 =  7,000 Eth (soft cap) - crowdsale is considered success after this value
+            fundingMinInWei = 3500000000000000000000;   //3 500 000 000 000 000 000 000 =  3,500 Eth (soft cap) - crowdsale is considered success after this value
 
             // value of ARX token for mainnet. if hardcap is reached, this results in 280,000,000 ARX tokens in general supply (+28,000,000 in the foundationFundMultisig for a total supply of 308,000,000)
             tokensPerEthPrice = 4000; // 4,000 tokens per Eth
