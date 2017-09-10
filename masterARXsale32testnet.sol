@@ -1,8 +1,8 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.15;
 // -------------------------------------------------
 // [Assistive Reality ARX ERC20 token & crowdsale contract w/10% dev alloc]
 // [https://aronline.io/icoinfo]
-// [v3.2 final released 05/09/17 final masterARXsale32mainnet.sol]
+// [v3.2 final released 10/09/17 final masterARXsale32mainnet.sol]
 // [Adapted from Ethereum standard crowdsale contract]
 // [Contact staff@aronline.io for any queries]
 // [Join us in changing the world]
@@ -11,12 +11,12 @@ pragma solidity ^0.4.13;
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
 // -------------------------------------------------
-// Security reviews completed 05/09/17 [passed OK]
-// Functional reviews completed 05/09/17 [passed OK]
-// Final code revision and regression test cycle complete 05/09/17 [passed]
+// Security reviews completed 10/09/17 [passed OK]
+// Functional reviews completed 10/09/17 [passed OK]
+// Final code revision and regression test cycle complete 10/09/17 [passed]
 // https://github.com/assistivereality/ico/blob/master/3.2crowdsaletestsARXmainnet.txt
 // -------------------------------------------------
-contract owned { // security reviewed 05/09/17
+contract owned { // security reviewed 10/09/17
     address public owner;
 
     function owned() {
@@ -31,7 +31,7 @@ contract owned { // security reviewed 05/09/17
     }
 }
 
-contract SafeMath { // security reviewed 05/09/17
+contract SafeMath { // security reviewed 10/09/17
   function safeMul(uint256 a, uint256 b) internal returns (uint256) {
     uint256 c = a * b;
     safeAssert(a == 0 || c / a == b);
@@ -61,7 +61,7 @@ contract SafeMath { // security reviewed 05/09/17
   }
 }
 
-contract ERC20Interface is owned, SafeMath { // security reviewed 05/09/17
+contract ERC20Interface is owned, SafeMath { // security reviewed 10/09/17
     function totalSupply() constant returns (uint256 tokenTotalSupply);
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
@@ -75,7 +75,7 @@ contract ERC20Interface is owned, SafeMath { // security reviewed 05/09/17
     event Refund(address indexed _refunder, uint256 _value);
 }
 
-contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
+contract ARXCrowdsale is ERC20Interface { // security reviewed 10/09/17
     // deployment variables for dynamic supply token
     string  public constant standard              = "ARX";
     string  public constant name                  = "ARX";
@@ -190,6 +190,8 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
 
     // ERC20 allow _spender to withdraw, multiple times, up to the _value amount
     function approve(address _spender, uint256 _amount) returns (bool success) {
+        //Fix for known double-spend https://docs.google.com/document/d/1YLPtQxZu1UAvO9cZ1O2RPXBbT0mooh4DYKjA_jp-RLM/edit#
+        require((_amount == 0) || (allowed[msg.sender][_spender] == 0));
         allowed[msg.sender][_spender] = _amount;
         Approval(msg.sender, _spender, _amount);
         return true;
@@ -344,7 +346,7 @@ contract ARXCrowdsale is ERC20Interface { // security reviewed 05/09/17
       && (amountRaisedInWei < fundingMinInWei)
       && (block.number > fundingEndBlock)
       && (balances[msg.sender] > 0));
-
+      //Proceed with refund
       uint256 ARXbalance = balances[msg.sender];
       balances[msg.sender] = 0;
       _totalSupply = safeSub(_totalSupply, ARXbalance);
