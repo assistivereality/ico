@@ -1,13 +1,12 @@
 26/09/17
+# Assistive Reality ARX token is released!
 
 # Token Address:
 0xb0D926c1BC3d78064F3e1075D5bD9A24F35Ae6C5
 
-# Assistive Reality ARX token is released!
-
 # Type:
 Type: ERC-20 Ethereum mainnet-issue token
-Genesis: Fixed, static, no more can be created
+Genesis: Fixed/static with no additional possible
 Total: 318,000,000 (includes packages, presale, ICO and foundation allocations)
 
 Notes: Fixes for known issues applied, regression testing performed, full-verify of all function security passed OK.
