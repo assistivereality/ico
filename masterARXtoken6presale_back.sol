@@ -12,7 +12,7 @@ pragma solidity ^0.4.13;
 // 1,000 ETH capped Pre-sale contract
 // Security reviews completed 26/09/17 [passed OK]
 // Functional reviews completed 26/09/17 [passed OK]
-// Final code revision and regression test cycle complete 27/09/17 [passed OK]
+// Final code revision and regression test cycle complete 26/09/17 [passed OK]
 // -------------------------------------------------
 
 contract owned {
@@ -117,14 +117,14 @@ contract ARXpresale is owned, safeMath {
       && (!(isPresaleSetup))
       && (!(beneficiaryWallet > 0))){
           // init addresses
-          tokenReward                             = ERC20Interface(0xb0D926c1BC3d78064F3e1075D5bD9A24F35Ae6C5);   // mainnet is 0xb0D926c1BC3d78064F3e1075D5bD9A24F35Ae6C5
-          beneficiaryWallet                       = 0xd93333f8cb765397A5D0d0e0ba53A2899B48511f;                   // mainnet is 0xd93333f8cb765397A5D0d0e0ba53A2899B48511f
-          foundationWallet                        = 0x70A0bE1a5d8A9F39afED536Ec7b55d87067371aA;                   // mainnet is 0x70A0bE1a5d8A9F39afED536Ec7b55d87067371aA
+          tokenReward                             = ERC20Interface(0x6cC9977EE54b21062FAA694d532A551fB97f891A);   // mainnet is 0xb0D926c1BC3d78064F3e1075D5bD9A24F35Ae6C5 //testnet = 0xC8F20A2E062E0E809898a89bd3A30277d571F954
+          beneficiaryWallet                       = 0x16Afd984584BBA2Bde4B8328126208a0c04FBe3c;                   // mainnet is 0xd93333f8cb765397A5D0d0e0ba53A2899B48511f //testnet = 0x1FD312fD7C14779Ceab5C679851bD3Ae4EB0Aab3
+          foundationWallet                        = 0x16Afd984584BBA2Bde4B8328126208a0c04FBe3c;                   // mainnet is 0x70A0bE1a5d8A9F39afED536Ec7b55d87067371aA //testnet = 0x1FD312fD7C14779Ceab5C679851bD3Ae4EB0Aab3
           tokensPerEthPrice                       = 8000;                                                         // set day1 presale value floating priceVar 8,000 ARX tokens per 1 ETH
 
           // funding targets
-          fundingMinCapInWei                      = 100000000000000000000;                                        // 100000000000000000000  = 100 Eth (min cap) //testnet 2500000000000000000   = 2.5 Eth
-          fundingMaxCapInWei                      = 1000000000000000000000;                                       // 1000000000000000000000 = 1000 Eth (max cap) //testnet 6500000000000000000  = 6.5 Eth
+          fundingMinCapInWei                      = 2500000000000000000;                                          // 100000000000000000000  = 100 Eth (min cap) //testnet 2500000000000000000   = 2.5 Eth
+          fundingMaxCapInWei                      = 6500000000000000000;                                          // 1000000000000000000000 = 1000 Eth (max cap) //testnet 6500000000000000000  = 6.5 Eth
 
           // update values
           amountRaisedInWei                       = 0;                                                            // init value to 0
@@ -155,13 +155,30 @@ contract ARXpresale is owned, safeMath {
       // Day 3-5 Price   1 ETH = 6750 ARX [blocks: s+10801  -> s+18000] +72hr - +120hr
       // Dau 5-7 Price   1 ETH = 6250 ARX [blocks: s+18001  -> <=fundingEndBlock] = +168hr (168/24 = 7 [x])
 
-      if (block.number >= fundingStartBlock && block.number <= fundingStartBlock+3600) { // 8000 ARX Day 1 level only
+      //if (block.number >= fundingStartBlock && block.number <= fundingStartBlock+3600) { // 8000 ARX Day 1 level only
+        //tokensPerEthPrice=8000;
+      //} else if (block.number >= fundingStartBlock+3601 && block.number <= fundingStartBlock+10800) { // 7250 ARX
+        //tokensPerEthPrice=7250;
+      //} else if (block.number >= fundingStartBlock+10801 && block.number <= fundingStartBlock+18000) { // 6750 ARX
+        //tokensPerEthPrice=6750;
+      //} else if (block.number >= fundingStartBlock+18001 && block.number <= fundingEndBlock) { // 6250 ARX
+      //  tokensPerEthPrice=6250;
+      //}
+
+
+      // Price configuration testnet:
+      // Day 0-1 Price   1 ETH = 8000 ARX [blocks: start    -> s+3600] 0 - +24hr
+      // Day 1-3 Price   1 ETH = 7250 ARX [blocks: s+3601   -> s+10800] +24hr - +72hr
+      // Day 3-5 Price   1 ETH = 6750 ARX [blocks: s+10801  -> s+18000] +72hr - +120hr
+      // Dau 5-7 Price   1 ETH = 6250 ARX [blocks: s+18001  -> <=fundingEndBlock] = +168hr (168/24 = 7 [x])
+
+      if (block.number >= fundingStartBlock && block.number <= fundingStartBlock+50) { // 8000 ARX Day 1 level only
         tokensPerEthPrice=8000;
-      } else if (block.number >= fundingStartBlock+3601 && block.number <= fundingStartBlock+10800) { // 7250 ARX Day 2,3
+      } else if (block.number >= fundingStartBlock+51 && block.number <= fundingStartBlock+95) { // 7250 ARX
         tokensPerEthPrice=7250;
-      } else if (block.number >= fundingStartBlock+10801 && block.number <= fundingStartBlock+18000) { // 6750 ARX Day 4,5
+      } else if (block.number >= fundingStartBlock+96 && block.number <= fundingStartBlock+140) { // 6750 ARX
         tokensPerEthPrice=6750;
-      } else if (block.number >= fundingStartBlock+18001 && block.number <= fundingEndBlock) { // 6250 ARX Day 6,7
+      } else if (block.number >= fundingStartBlock+141 && block.number <= fundingEndBlock) { // 6250 ARX
         tokensPerEthPrice=6250;
       } else {
         tokensPerEthPrice=6250; // default back out to this value instead of failing to return or return 0/halting;
@@ -258,4 +275,5 @@ contract ARXpresale is owned, safeMath {
       isPresaleClosed = true;
       currentStatus = "packagesale is closed";
     }
-  }
+
+}
