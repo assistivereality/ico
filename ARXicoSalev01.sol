@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
-// **-----------------------------------------------
+
+// -------------------------------------------------
 // Assistive Reality.io ICO token sale contract
 // Final revision 22b
 // Refunds integrated, full test suite passed
@@ -14,14 +15,18 @@ pragma solidity ^0.4.18;
 // -   Conversion of all constant to view or pure dependant on state changed
 // -   Full regression test of code updates
 // -   Revision of block number timing for new Ethereum block times
+// - Removed duplicate Buy/Transfer event call in buyARXtokens
+// - Burn event now records number of ARX tokens burned vs Refund event Eth
+// - Transfer event now fired when beneficiaryWallet withdraws
 // -------------------------------------------------
 // Price configuration:
-// First Day Bonus    +50% = 1,500 ARX  = 1 ETH       [blocks: start   -> s+3600]
-// First Week Bonus   +40% = 1,400 ARX  = 1 ETH       [blocks: s+3601  -> s+25200]
-// Second Week Bonus  +30% = 1,300 ARX  = 1 ETH       [blocks: s+25201 -> s+50400]
-// Third Week Bonus   +25% = 1,250 ARX  = 1 ETH       [blocks: s+50401 -> s+75600]
-// Final Week Bonus   +15% = 1,150 ARX  = 1 ETH       [blocks: s+75601 -> end]
+// First Day Bonus    +50% = 1,500 ARX  = 1 ETH       [blocks: start -> s+5959]
+// First Week Bonus   +40% = 1,400 ARX  = 1 ETH       [blocks: s+5960  -> s+41710]
+// Second Week Bonus  +30% = 1,300 ARX  = 1 ETH       [blocks: s+41711 -> s+83421]
+// Third Week Bonus   +25% = 1,250 ARX  = 1 ETH       [blocks: s+83422 -> s+125131]
+// Final Week Bonus   +15% = 1,150 ARX  = 1 ETH       [blocks: s+125132 -> endblock]
 // -------------------------------------------------
+
 contract owned {
     address public owner;
 
@@ -104,7 +109,7 @@ contract ARXCrowdsale is owned, safeMath {
   event Refund(address indexed _refunder, uint256 _value);
   event Burn(address _from, uint256 _value);
   mapping(address => uint256) balancesArray;
-  mapping(address => uint256) fundValue;
+  mapping(address => uint256) usersARXfundValue;
 
   // default function, map admin
   function ARXCrowdsale() public onlyOwner {
@@ -139,7 +144,6 @@ contract ARXCrowdsale is owned, safeMath {
           amountRaisedInWei                       = 0;
           initialSupply                           = 1100000;                                      //   7,500,000 + 2 decimals = 750000000 //testnet 1100000 =11,000
           tokensRemaining                         = safeDiv(initialSupply,100);
-
           fundingStartBlock                       = _fundingStartBlock;
           fundingEndBlock                         = _fundingEndBlock;
 
@@ -148,8 +152,6 @@ contract ARXCrowdsale is owned, safeMath {
           isCrowdSaleClosed                       = false;
           CurrentStatus                           = "Crowdsale is setup";
 
-          //gas reduction experiment
-          setPrice();
           return "Crowdsale is setup";
       } else if (msg.sender != admin) {
           return "not authorized";
@@ -160,20 +162,20 @@ contract ARXCrowdsale is owned, safeMath {
 
     function setPrice() internal {
       // Price configuration:
-      // First Day Bonus    +50% = 1,500 ARX  = 1 ETH       [blocks: start -> s+3600]
-      // First Week Bonus   +40% = 1,400 ARX  = 1 ETH       [blocks: s+3601  -> s+25200]
-      // Second Week Bonus  +30% = 1,300 ARX  = 1 ETH       [blocks: s+25201 -> s+50400]
-      // Third Week Bonus   +25% = 1,250 ARX  = 1 ETH       [blocks: s+50401 -> s+75600]
-      // Final Week Bonus   +15% = 1,150 ARX  = 1 ETH       [blocks: s+75601 -> endblock]
-      if (block.number >= fundingStartBlock && block.number <= fundingStartBlock+24) { // First Day Bonus    +50% = 1,500 ARX  = 1 ETH  [blocks: start -> s+24]
+      // First Day Bonus    +50% = 1,500 ARX  = 1 ETH       [blocks: start -> s+5959]
+      // First Week Bonus   +40% = 1,400 ARX  = 1 ETH       [blocks: s+5960  -> s+41710]
+      // Second Week Bonus  +30% = 1,300 ARX  = 1 ETH       [blocks: s+41711 -> s+83421]
+      // Third Week Bonus   +25% = 1,250 ARX  = 1 ETH       [blocks: s+83422 -> s+125131]
+      // Final Week Bonus   +15% = 1,150 ARX  = 1 ETH       [blocks: s+125132 -> endblock]
+      if (block.number >= fundingStartBlock && block.number <= fundingStartBlock+5959) { // First Day Bonus    +50% = 1,500 ARX  = 1 ETH  [blocks: start -> s+24]
         tokensPerEthPrice=1500;
-      } else if (block.number >= fundingStartBlock+25 && block.number <= fundingStartBlock+45) { // First Week Bonus   +40% = 1,400 ARX  = 1 ETH  [blocks: s+25 -> s+45]
+      } else if (block.number >= fundingStartBlock+5960 && block.number <= fundingStartBlock+41710) { // First Week Bonus   +40% = 1,400 ARX  = 1 ETH  [blocks: s+25 -> s+45]
         tokensPerEthPrice=1400;
-      } else if (block.number >= fundingStartBlock+46 && block.number <= fundingStartBlock+65) { // Second Week Bonus  +30% = 1,300 ARX  = 1 ETH  [blocks: s+46 -> s+65]
+      } else if (block.number >= fundingStartBlock+41711 && block.number <= fundingStartBlock+83421) { // Second Week Bonus  +30% = 1,300 ARX  = 1 ETH  [blocks: s+46 -> s+65]
         tokensPerEthPrice=1300;
-      } else if (block.number >= fundingStartBlock+66 && block.number <= fundingStartBlock+85) { // Third Week Bonus   +25% = 1,250 ARX  = 1 ETH  [blocks: s+66 -> s+85]
+      } else if (block.number >= fundingStartBlock+83422 && block.number <= fundingStartBlock+125131) { // Third Week Bonus   +25% = 1,250 ARX  = 1 ETH  [blocks: s+66 -> s+85]
         tokensPerEthPrice=1250;
-      } else if (block.number >= fundingStartBlock+86 && block.number <= fundingEndBlock) { // Final Week Bonus   +15% = 1,150 ARX  = 1 ETH  [blocks: s+86 -> endBlock]
+      } else if (block.number >= fundingStartBlock+125132 && block.number <= fundingEndBlock) { // Final Week Bonus   +15% = 1,150 ARX  = 1 ETH  [blocks: s+86 -> endBlock]
         tokensPerEthPrice=1150;
       }
     }
@@ -181,10 +183,10 @@ contract ARXCrowdsale is owned, safeMath {
     // default payable function when sending ether to this contract
     function () public payable {
       require(msg.data.length == 0);
-      BuyARXtokens();
+      buyARXtokens();
     }
 
-    function BuyARXtokens() public payable {
+    function buyARXtokens() public payable {
       // 0. conditions (length, crowdsale setup, zero check, exceed funding contrib check, contract valid check, within funding block range check, balance overflow check etc)
       require(!(msg.value == 0)
       && (isCrowdSaleSetup)
@@ -205,14 +207,14 @@ contract ARXCrowdsale is owned, safeMath {
       tokenReward.transfer(msg.sender, rewardTransferAmount);
 
       // 4. events
-      fundValue[msg.sender]           = safeAdd(fundValue[msg.sender], msg.value);
-      Transfer(this, msg.sender, msg.value);
+      usersARXfundValue[msg.sender]           = safeAdd(usersARXfundValue[msg.sender], msg.value);
       Buy(msg.sender, msg.value, rewardTransferAmount);
     }
 
     function beneficiaryMultiSigWithdraw(uint256 _amount) public onlyOwner {
       require(areFundsReleasedToBeneficiary && (amountRaisedInWei >= fundingMinCapInWei));
       beneficiaryWallet.transfer(_amount);
+      Transfer(this, beneficiaryWallet, _amount);
     }
 
     function checkGoalReached() public onlyOwner returns (bytes32 response) { // return crowdfund status to owner for each result case, update public var
@@ -233,7 +235,7 @@ contract ARXCrowdsale is owned, safeMath {
         isCrowdSaleClosed = true;
         CurrentStatus = "Unsuccessful (Eth < Softcap)";
         return "Unsuccessful (Eth < Softcap)";
-      } else if ((amountRaisedInWei >= fundingMinCapInWei) && (tokensRemaining == 0)) { // ICO ended, all tokens gone
+      } else if ((amountRaisedInWei >= fundingMinCapInWei) && (tokensRemaining == 0)) { // ICO ended, all tokens bought!
           areFundsReleasedToBeneficiary = true;
           isCrowdSaleClosed = true;
           CurrentStatus = "Successful (ARX >= Hardcap)!";
@@ -249,7 +251,6 @@ contract ARXCrowdsale is owned, safeMath {
         CurrentStatus = "In progress (Eth >= Softcap)!";
         return "In progress (Eth >= Softcap)!";
       }
-      setPrice();
     }
 
     function refund() public { // any contributor can call this to have their Eth returned. user's purchased ARX tokens are burned prior refund of Eth.
@@ -257,16 +258,20 @@ contract ARXCrowdsale is owned, safeMath {
       require ((amountRaisedInWei < fundingMinCapInWei)
       && (isCrowdSaleClosed)
       && (block.number > fundingEndBlock)
-      && (fundValue[msg.sender] > 0));
+      && (usersARXfundValue[msg.sender] > 0));
 
       //burn user's token ARX token balance, refund Eth sent
-      uint256 ethRefund = fundValue[msg.sender];
+      uint256 ethRefund = usersARXfundValue[msg.sender];
       balancesArray[msg.sender] = 0;
-      fundValue[msg.sender] = 0;
-      Burn(msg.sender, ethRefund);
+      usersARXfundValue[msg.sender] = 0;
 
-      //send Eth back, burn tokens
+      //record Burn event with number of ARX tokens burned
+      Burn(msg.sender, usersARXfundValue[msg.sender]);
+
+      //send Eth back
       msg.sender.transfer(ethRefund);
+
+      //record Refund event with number of Eth refunded in transaction
       Refund(msg.sender, ethRefund);
     }
 }
