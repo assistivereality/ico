@@ -3,10 +3,10 @@ pragma solidity ^0.4.18;
 // Assistive Reality.io ICO token sale contract
 // Final revision 22b
 // Refunds integrated, full test suite passed
-// **-----------------------------------------------
+// -------------------------------------------------
 // ERC Token Standard #20 Interface
 // https://github.com/ethereum/EIPs/issues/20
-// **-----------------------------------------------
+// -------------------------------------------------
 // Recent changes:
 // - Updates to comply with latest Solidity versioning (0.4.18):
 // -   Classification of internal/private vs public functions
