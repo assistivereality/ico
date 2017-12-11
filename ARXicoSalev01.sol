@@ -133,16 +133,16 @@ contract ARXCrowdsale is owned, safeMath {
       && (!(isCrowdSaleSetup))
       && (!(beneficiaryWallet > 0))){
           // init addresses
-          tokenReward                             = StandardToken(0x2498E6d0D86a2b7777d6e0b0341DE50b49A115c4);  //mainnet is 0x7D5Edcd23dAa3fB94317D32aE253eE1Af08Ba14d //testnet = 0x75508c2B1e46ea29B7cCf0308d4Cb6f6af6211e0
-          beneficiaryWallet                       = 0x304Ce6aa8ABcf0c92A50Bc340554f5283D3DecaD;   // mainnet is 0x00F959866E977698D14a36eB332686304a4d6AbA //testnet = 0xDe6BE2434E8eD8F74C8392A9eB6B6F7D63DDd3D7
+          tokenReward                             = StandardToken(0x7D5Edcd23dAa3fB94317D32aE253eE1Af08Ba14d);  //mainnet is 0x7D5Edcd23dAa3fB94317D32aE253eE1Af08Ba14d //testnet = 0x75508c2B1e46ea29B7cCf0308d4Cb6f6af6211e0
+          beneficiaryWallet                       = 0x00F959866E977698D14a36eB332686304a4d6AbA;   // mainnet is 0x00F959866E977698D14a36eB332686304a4d6AbA //testnet = 0xDe6BE2434E8eD8F74C8392A9eB6B6F7D63DDd3D7
           tokensPerEthPrice                       = 1500;                                         // set day1 initial value floating priceVar 1,500 tokens per Eth
 
           // funding targets
-          fundingMinCapInWei                      = 6000000000000000000;                          //300000000000000000000 =  300 Eth (min cap) - crowdsale is considered success after this value  //testnet 6000000000000000000 = 6Eth
+          fundingMinCapInWei                      = 300000000000000000000;                        // 300000000000000000000 =  300 Eth (min cap) - crowdsale is considered success after this value  //testnet 6000000000000000000 = 6Eth
 
           // update values
           amountRaisedInWei                       = 0;
-          initialSupply                           = 1100000;                                      //   7,500,000 + 2 decimals = 750000000 //testnet 1100000 =11,000
+          initialSupply                           = 27500000000;                                  // 275,000,000 + 2 decimals = 27500000000 //testnet 1100000 =11,000
           tokensRemaining                         = safeDiv(initialSupply,100);
           fundingStartBlock                       = _fundingStartBlock;
           fundingEndBlock                         = _fundingEndBlock;
@@ -151,10 +151,9 @@ contract ARXCrowdsale is owned, safeMath {
           isCrowdSaleSetup                        = true;
           isCrowdSaleClosed                       = false;
           CurrentStatus                           = "Crowdsale is setup";
-
           return "Crowdsale is setup";
       } else if (msg.sender != admin) {
-          return "not authorized";
+          return "not authorised";
       } else  {
           return "campaign cannot be changed";
       }
@@ -207,7 +206,7 @@ contract ARXCrowdsale is owned, safeMath {
       tokenReward.transfer(msg.sender, rewardTransferAmount);
 
       // 4. events
-      usersARXfundValue[msg.sender]           = safeAdd(usersARXfundValue[msg.sender], msg.value);
+      usersARXfundValue[msg.sender]   = safeAdd(usersARXfundValue[msg.sender], msg.value);
       Buy(msg.sender, msg.value, rewardTransferAmount);
     }
 
@@ -217,39 +216,33 @@ contract ARXCrowdsale is owned, safeMath {
       Transfer(this, beneficiaryWallet, _amount);
     }
 
-    function checkGoalReached() public onlyOwner returns (bytes32 response) { // return crowdfund status to owner for each result case, update public var
+    function checkGoalReached() public onlyOwner { // return crowdfund status to owner for each result case, update public vars
       // update state & status variables
       require (isCrowdSaleSetup);
       if ((amountRaisedInWei < fundingMinCapInWei) && (block.number <= fundingEndBlock && block.number >= fundingStartBlock)) { // ICO in progress, under softcap
-        areFundsReleasedToBeneficiary = false;
-        isCrowdSaleClosed = false;
-        CurrentStatus = "In progress (Eth < Softcap)";
-        return "In progress (Eth < Softcap)";
+          areFundsReleasedToBeneficiary = false;
+          isCrowdSaleClosed = false;
+          CurrentStatus = "In progress (Eth < Softcap)";
       } else if ((amountRaisedInWei < fundingMinCapInWei) && (block.number < fundingStartBlock)) { // ICO has not started
-        areFundsReleasedToBeneficiary = false;
-        isCrowdSaleClosed = false;
-        CurrentStatus = "Crowdsale is setup";
-        return "Crowdsale is setup";
+          areFundsReleasedToBeneficiary = false;
+          isCrowdSaleClosed = false;
+          CurrentStatus = "Crowdsale is setup";
       } else if ((amountRaisedInWei < fundingMinCapInWei) && (block.number > fundingEndBlock)) { // ICO ended, under softcap
-        areFundsReleasedToBeneficiary = false;
-        isCrowdSaleClosed = true;
-        CurrentStatus = "Unsuccessful (Eth < Softcap)";
-        return "Unsuccessful (Eth < Softcap)";
+          areFundsReleasedToBeneficiary = false;
+          isCrowdSaleClosed = true;
+          CurrentStatus = "Unsuccessful (Eth < Softcap)";
       } else if ((amountRaisedInWei >= fundingMinCapInWei) && (tokensRemaining == 0)) { // ICO ended, all tokens bought!
           areFundsReleasedToBeneficiary = true;
           isCrowdSaleClosed = true;
           CurrentStatus = "Successful (ARX >= Hardcap)!";
-          return "Successful (ARX >= Hardcap)!";
       } else if ((amountRaisedInWei >= fundingMinCapInWei) && (block.number > fundingEndBlock) && (tokensRemaining > 0)) { // ICO ended, over softcap!
           areFundsReleasedToBeneficiary = true;
           isCrowdSaleClosed = true;
           CurrentStatus = "Successful (Eth >= Softcap)!";
-          return "Successful (Eth >= Softcap)!";
       } else if ((amountRaisedInWei >= fundingMinCapInWei) && (tokensRemaining > 0) && (block.number <= fundingEndBlock)) { // ICO in progress, over softcap!
-        areFundsReleasedToBeneficiary = true;
-        isCrowdSaleClosed = false;
-        CurrentStatus = "In progress (Eth >= Softcap)!";
-        return "In progress (Eth >= Softcap)!";
+          areFundsReleasedToBeneficiary = true;
+          isCrowdSaleClosed = false;
+          CurrentStatus = "In progress (Eth >= Softcap)!";
       }
     }
 
