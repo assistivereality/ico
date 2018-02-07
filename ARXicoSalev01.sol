@@ -97,6 +97,11 @@ contract ARXCrowdsale is owned, safeMath {
 
   // loop control, ICO startup and limiters
   string  public CurrentStatus                   = "";        // current crowdsale status
+  string  public Advisor1WalletAdddress          = "";        // advisor 1 wallet ETH
+  string  public Advisor2WalletAdddress          = "";        // advisor 2 wallet ETH
+  string  public Advisor3WalletAdddress          = "";        // advisor 3 wallet ETH
+  string  public Advisor4WalletAdddress          = "";        // advisor 4 wallet ETH
+
   uint256 public fundingStartBlock;                           // crowdsale start block#
   uint256 public fundingEndBlock;                             // crowdsale end block#
   bool    public isCrowdSaleClosed               = false;     // crowdsale completion boolean
@@ -215,6 +220,11 @@ contract ARXCrowdsale is owned, safeMath {
       beneficiaryWallet.transfer(_amount);
       Transfer(this, beneficiaryWallet, _amount);
     }
+
+    function assignAdvisorFunds() public onlyOwner { // non returning function
+      
+    }
+
 
     function checkGoalReached() public onlyOwner { // return crowdfund status to owner for each result case, update public vars
       // update state & status variables
