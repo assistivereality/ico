@@ -132,7 +132,7 @@ contract ARXCrowdsale is owned, safeMath {
       tokenReward                             = StandardToken(0xb0D926c1BC3d78064F3e1075D5bD9A24F35Ae6C5);
 
       // funding targets
-      fundingMinCapInWei                      = 30000000000000000000;                       // ETH 300 wei
+      fundingMinCapInWei                      = 30000000000000000000;                       // 300 ETH wei
 
       // update values
       amountRaisedInWei                       = 0;
