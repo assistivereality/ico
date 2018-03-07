@@ -114,12 +114,12 @@ contract ARXCrowdsale is owned, safeMath {
 
   // total number of tokens initially
   function initialARXSupply() public view returns (uint256 initialARXtokenCount) {
-    return safeDiv(initialTokenSupply,1000000000000000000); // div by 10,000 for display normalisation (18 decimals)
+    return safeDiv(initialTokenSupply,1000000000000000000); // div by 1000000000000000000 for display normalisation (18 decimals)
   }
 
   // remaining number of tokens
   function remainingARXSupply() public view returns (uint256 remainingARXtokenCount) {
-    return safeDiv(tokensRemaining,1000000000000000000); // div by 10,000 for display normalisation (18 decimals)
+    return safeDiv(tokensRemaining,1000000000000000000); // div by 1000000000000000000 for display normalisation (18 decimals)
   }
 
   // setup the CrowdSale parameters
