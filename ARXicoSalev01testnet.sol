@@ -89,6 +89,7 @@ contract ARXCrowdsale is owned, safeMath {
   // uint256 values for min,max,caps,tracking
   uint256 public amountRaisedInWei;                           //
   uint256 public fundingMinCapInWei;                          //
+  uint256 public fundingMaxCapInWei;                          //
 
   // loop control, ICO startup and limiters
   string  public CurrentStatus                    = "";        // current crowdsale status
@@ -132,14 +133,15 @@ contract ARXCrowdsale is owned, safeMath {
       tokenReward                             = StandardToken(0x1550c22D7645dB66d5616F75788adb1e0FaCf611);
 
       // funding targets
-      fundingMinCapInWei                      = 2000000000000000000;                       // 2 ETH wei
+      fundingMinCapInWei                      = 2000000000000000000;                        // 2 ETH wei
+      initialTokenSupply                      = 277500000000000000000000000;                // 277,500,000 + 18 dec resolution
 
       // update values
       amountRaisedInWei                       = 0;
-      initialTokenSupply                      = 277500000000000000000000000;                // 277,500,000 + 18 dec resolution
       tokensRemaining                         = initialTokenSupply;
       fundingStartBlock                       = _fundingStartBlock;
       fundingEndBlock                         = _fundingEndBlock;
+      fundingMaxCapInWei                      = 4500000000000000000000;
 
       // configure crowdsale
       isCrowdSaleSetup                        = true;
@@ -154,23 +156,23 @@ contract ARXCrowdsale is owned, safeMath {
   }
 
   function checkPrice() internal view returns (uint256 currentPriceValue) {
-    if (block.number >= 1895375) {
+    if (block.number >= 5532293) {
       return (2250);
-    } else if (block.number >= 1895350) {
+    } else if (block.number >= 5490292) {
       return (2500);
-    } else if (block.number >= 1895325) {
+    } else if (block.number >= 5406291) {
       return (2750);
-    } else if (block.number >= 1895300) {
+    } else if (block.number >= 5370290) {
       return (3000);
-    } else if (block.number >= 1895275) {
+    } else if (block.number >= 5352289) {
       return (3250);
-    } else if (block.number >= 1895250) {
+    } else if (block.number >= 5310289) {
       return (3500);
-    } else if (block.number >= 1895225) {
+    } else if (block.number >= 5268288) {
       return (4000);
-    } else if (block.number >= 1895200) {
+    } else if (block.number >= 5232287) {
       return (4500);
-    } else if (block.number >= 1895175) {
+    } else if (block.number >= fundingStartBlock) {
       return (5000);
     }
   }
