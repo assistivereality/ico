@@ -89,7 +89,6 @@ contract ARXCrowdsale is owned, safeMath {
   // uint256 values for min,max,caps,tracking
   uint256 public amountRaisedInWei;                           //
   uint256 public fundingMinCapInWei;                          //
-  uint256 public fundingMaxCapInWei;                          //
 
   // loop control, ICO startup and limiters
   string  public CurrentStatus                    = "";        // current crowdsale status
@@ -129,19 +128,18 @@ contract ARXCrowdsale is owned, safeMath {
     && (!(isCrowdSaleSetup))
     && (!(beneficiaryWallet > 0))) {
       // init addresses
-      beneficiaryWallet                       = 0x98DE47A1F7F96500276900925B334E4e54b1caD5;
-      tokenReward                             = StandardToken(0xb0D926c1BC3d78064F3e1075D5bD9A24F35Ae6C5);
+      beneficiaryWallet                       = 0xadaE6B5cA4a0A73d184CB7a97b953fbA521B4241;
+      tokenReward                             = StandardToken(0x1550c22D7645dB66d5616F75788adb1e0FaCf611);
 
       // funding targets
-      fundingMinCapInWei                      = 30000000000000000000;                       // 300  ETH wei
-      initialTokenSupply                      = 277500000000000000000000000;                // 277,500,000 + 18 dec resolution
+      fundingMinCapInWei                      = 2000000000000000000;                       // 2 ETH wei
 
       // update values
       amountRaisedInWei                       = 0;
+      initialTokenSupply                      = 277500000000000000000000000;                // 277,500,000 + 18 dec resolution
       tokensRemaining                         = initialTokenSupply;
       fundingStartBlock                       = _fundingStartBlock;
       fundingEndBlock                         = _fundingEndBlock;
-      fundingMaxCapInWei                      = 4500000000000000000000;
 
       // configure crowdsale
       isCrowdSaleSetup                        = true;
@@ -156,23 +154,23 @@ contract ARXCrowdsale is owned, safeMath {
   }
 
   function checkPrice() internal view returns (uint256 currentPriceValue) {
-    if (block.number >= 5532293) {
+    if (block.number >= 1895375) {
       return (2250);
-    } else if (block.number >= 5490292) {
+    } else if (block.number >= 1895350) {
       return (2500);
-    } else if (block.number >= 5406291) {
+    } else if (block.number >= 1895325) {
       return (2750);
-    } else if (block.number >= 5370290) {
+    } else if (block.number >= 1895300) {
       return (3000);
-    } else if (block.number >= 5352289) {
+    } else if (block.number >= 1895275) {
       return (3250);
-    } else if (block.number >= 5310289) {
+    } else if (block.number >= 1895250) {
       return (3500);
-    } else if (block.number >= 5268288) {
+    } else if (block.number >= 1895225) {
       return (4000);
-    } else if (block.number >= 5232287) {
+    } else if (block.number >= 1895200) {
       return (4500);
-    } else if (block.number >= fundingStartBlock) {
+    } else if (block.number >= 1895175) {
       return (5000);
     }
   }
